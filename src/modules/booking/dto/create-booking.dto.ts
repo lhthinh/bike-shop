@@ -1,16 +1,95 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNumber, IsString } from 'class-validator'
+import { Type } from 'class-transformer'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
+import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
 export class CreateBookingDto {
-  @ApiProperty({
-    example: 0,
-  })
+  @ApiProperty({ example: 0 })
   @IsNumber()
-  type: String
+  @Type(() => Number)
+  type: number
 
-  @ApiProperty({
-    example: '',
-  })
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
   @IsString()
-  fullName: String
+  fullName: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  phoneNumber: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  license: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => Date)
+  @Trim()
+  @IsString()
+  bookingDate: Date
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  bookingTimeFrom: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  bookingTimeTo: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  note: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  brandCode: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  bikeCode: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  serviceCode: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  storeCode: string
+
+  @ApiProperty({ example: '' })
+  @IsOptional()
+  @Type(() => String)
+  @Trim()
+  @IsString()
+  bookingAddress: string
 }

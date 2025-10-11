@@ -9,6 +9,8 @@ import {
 import CoreEntity from '../core-entity'
 import { Brand } from '../_common/brand.entity'
 import { Bike } from '../_common/bike.entity'
+import { Store } from '../_common/store.entity'
+import { Service } from '../_common/service.entity'
 
 @Entity({
   // schema: '_booking',
@@ -18,8 +20,8 @@ export class Booking extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ name: 'type', type: 'varchar', comment: 'Type đặt lịch' })
-  type: string
+  @Column({ name: 'type', type: 'integer', comment: 'Type đặt lịch' })
+  type: number
 
   @Column({ name: 'full_name', type: 'varchar', comment: 'Họ và tên' })
   fullName: string
@@ -27,17 +29,46 @@ export class Booking extends CoreEntity {
   @Column({ name: 'phone_number', type: 'varchar', unique: true })
   phoneNumber: string
 
-  @ManyToOne(() => Brand, (brand) => brand.booking)
-  @JoinColumn({ name: 'brand_id', referencedColumnName: 'code' })
-  brandId: Brand
+  @Column({ name: 'license', type: 'varchar', unique: true })
+  license: string
 
-  @ManyToOne(() => Bike, (bike) => bike.booking)
-  @JoinColumn({ name: 'bike_id', referencedColumnName: 'code' })
-  bikeId: Bike
+  @Column({ name: 'booking_from', type: 'timestamptz', nullable: true })
+  bookingFrom: Date
 
-  @Column({ name: 'bookingDate', type: 'timestamptz' })
-  bookingDate: Date
+  @Column({ name: 'bookingTo', type: 'timestamptz', nullable: true })
+  bookingTo: Date
 
   @Column({ name: 'note', type: 'varchar', nullable: true })
   note: string
+
+  @Column({ name: 'note', type: 'varchar', nullable: true })
+  bookingAddress: string
+
+  @ManyToOne(() => Brand, (brand) => brand.booking)
+  @JoinColumn({ name: 'brand_code', referencedColumnName: 'code' })
+  brand: Brand
+
+  @Column({ name: 'brand_code', type: 'varchar', nullable: true })
+  brandCode: string
+
+  @ManyToOne(() => Bike, (bike) => bike.booking)
+  @JoinColumn({ name: 'bike_code', referencedColumnName: 'code' })
+  bike: Bike
+
+  @Column({ name: 'bike_code', type: 'varchar', nullable: true })
+  bikeCode: string
+
+  @ManyToOne(() => Store, (store) => store.booking)
+  @JoinColumn({ name: 'store_code', referencedColumnName: 'code' })
+  store: Store
+
+  @Column({ name: 'store_code', type: 'varchar', nullable: true })
+  storeCode: string
+
+  @ManyToOne(() => Service, (service) => service.booking)
+  @JoinColumn({ name: 'service_code', referencedColumnName: 'code' })
+  service: Service
+
+  @Column({ name: 'service_code', type: 'varchar', nullable: true })
+  serviceCode: string
 }

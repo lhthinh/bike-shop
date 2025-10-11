@@ -16,6 +16,6 @@ export class Brand extends CoreEntity {
   @Column({ name: 'name', type: 'varchar' })
   name: string
 
-  @OneToMany(() => Booking, (booking) => booking.brandId)
+  @OneToMany(() => Booking, (booking) => booking.brand)
   booking: Booking[]
 }

@@ -9,6 +9,4 @@ export const swaggerOptions: SwaggerCustomOptions = {
   },
   useGlobalPrefix: true,
   customSiteTitle: 'Ant Motor API Docs',
-  customJs: './attachments/js/swagger-ui.js',
-  customCssUrl: './attachments/css/swagger-ui.dark.css',
 }
