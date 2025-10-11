@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Query } from '@nestjs/common'
 import { GetBrandDto } from '../dto/get-brand.dto'
 import { BrandService } from '../services/brand.service'
 import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger'
@@ -15,7 +15,7 @@ export class BrandController {
   }
 
   @Get('')
-  async getBrand(getBrandDto: GetBrandDto) {
+  async getBrand(@Query() getBrandDto: GetBrandDto) {
     return await this.brandService.getBrand(getBrandDto)
   }
 }

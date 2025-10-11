@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Query } from '@nestjs/common'
 import { GetBikeDto } from '../dto/get-bike.dto'
 import { BikeService } from '../services/bike.service'
 import { ServiceService } from '../services/service.service'
@@ -16,7 +16,7 @@ export class ServiceController {
   }
 
   @Get('')
-  async getBike(getBikeDto: GetBikeDto) {
+  async getBike(@Query() getBikeDto: GetBikeDto) {
     return await this.serviceService.getService(getBikeDto)
   }
 }

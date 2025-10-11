@@ -25,12 +25,12 @@ export class StoreService {
 
     return await this.storeRepository.save(store)
   }
-  
+
   async getStore(getStoreDto: GetStoreDto) {
-    const { search } = getStoreDto
-    return await this.storeRepository.find({
+    const { search } = getStoreDto || {}
+    return await this.storeRepository.find({select: {name: true , code : true},
       where: {
-        name: Like(`%${search}%`),
+        name: Like(`%${search || ''}%`),
       },
     })
   }

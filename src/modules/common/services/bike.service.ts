@@ -23,10 +23,11 @@ export class BikeService {
   }
 
   async getBike(getBikeDto: GetBikeDto) {
-    const { search } = getBikeDto
+    const { search } = getBikeDto || {}
     return await this.bikeRepository.find({
+      select: { name: true, code: true },
       where: {
-        name: Like(`%${search}%`),
+        name: Like(`%${search || ''}%`),
       },
     })
   }

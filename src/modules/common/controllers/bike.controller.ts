@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Query } from '@nestjs/common'
 import { GetBikeDto } from '../dto/get-bike.dto'
 import { BikeService } from '../services/bike.service'
 import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger'
@@ -15,7 +15,7 @@ export class BikeController {
   }
 
   @Get('')
-  async getBike(getBikeDto: GetBikeDto) {
+  async getBike(@Query() getBikeDto: GetBikeDto) {
     return await this.bikeService.getBike(getBikeDto)
   }
 }

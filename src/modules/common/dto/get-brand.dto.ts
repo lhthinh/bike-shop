@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 import { PaginationDTO } from 'src/common/dtos/pagination.dto'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
-export class GetBrandDto extends PaginationDTO {
-  @ApiProperty({ example: '' })
+export class GetBrandDto {
+  @ApiProperty({ example: '', required: false })
+  @IsOptional()
   @IsString()
   @Trim()
   search: string

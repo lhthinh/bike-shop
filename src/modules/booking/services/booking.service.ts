@@ -88,7 +88,7 @@ export class BookingService {
       bookingAddress,
       note,
       brandCode,
-      storeCode,
+      storeCode : storeCode || null,
       bikeCode,
       serviceCode,
     }

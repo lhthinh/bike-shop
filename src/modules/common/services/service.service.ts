@@ -24,10 +24,10 @@ export class ServiceService {
   }
 
   async getService(getServiceDto: GetServiceDto) {
-    const { search } = getServiceDto
-    return await this.serviceRepository.find({
+    const { search } = getServiceDto || {}
+    return await this.serviceRepository.find({select: {name: true , code : true},
       where: {
-        name: Like(`%${search}%`),
+        name: Like(`%${search || ''}%`),
       },
     })
   }

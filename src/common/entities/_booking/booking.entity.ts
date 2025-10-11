@@ -35,13 +35,13 @@ export class Booking extends CoreEntity {
   @Column({ name: 'booking_from', type: 'timestamptz', nullable: true })
   bookingFrom: Date
 
-  @Column({ name: 'bookingTo', type: 'timestamptz', nullable: true })
+  @Column({ name: 'booking_to', type: 'timestamptz', nullable: true })
   bookingTo: Date
 
   @Column({ name: 'note', type: 'varchar', nullable: true })
   note: string
 
-  @Column({ name: 'note', type: 'varchar', nullable: true })
+  @Column({ name: 'booking_address', type: 'varchar', nullable: true })
   bookingAddress: string
 
   @ManyToOne(() => Brand, (brand) => brand.booking)
@@ -62,7 +62,11 @@ export class Booking extends CoreEntity {
   @JoinColumn({ name: 'store_code', referencedColumnName: 'code' })
   store: Store
 
-  @Column({ name: 'store_code', type: 'varchar', nullable: true })
+  @Column({
+    name: 'store_code',
+    type: 'varchar',
+    nullable: true,
+  })
   storeCode: string
 
   @ManyToOne(() => Service, (service) => service.booking)

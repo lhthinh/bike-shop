@@ -23,10 +23,10 @@ export class BrandService {
   }
 
   async getBrand(getBrandDto: GetBrandDto) {
-    const { search } = getBrandDto
-    return await this.brandRepository.find({
+    const { search } = getBrandDto || {}
+    return await this.brandRepository.find({select: {name: true , code : true},
       where: {
-        name: Like(`%${search}%`),
+        name: Like(`%${search || ''}%`),
       },
     })
   }
