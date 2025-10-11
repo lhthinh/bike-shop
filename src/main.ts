@@ -22,7 +22,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor())
   const document = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('swagger-ui', app, document, swaggerOptions)
-  await app.listen(PORT, () => {
+  await app.listen(PORT, '0.0.0.0', () => {
     console.log(`Listening on port ${PORT} and environment ${ENVIRONMENT}`)
   })
 }

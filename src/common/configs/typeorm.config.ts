@@ -19,17 +19,23 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
       host,
       port,
       database,
+      ssl: {
+        rejectUnauthorized: false,
+      },
       username: configService.getOrThrow('POSTGRES_USERNAME'),
       password: configService.getOrThrow('POSTGRES_PASSWORD'),
       entities: [path.join(__dirname, '..', '..', '**', '*.entity.{js,ts}')],
-      subscribers: [path.join(__dirname, '..', '..', '**', '*.subscriber.{js,ts}')],
+      subscribers: [
+        path.join(__dirname, '..', '..', '**', '*.subscriber.{js,ts}'),
+      ],
       synchronize:
-        false ||
-        (!_.includes(
-          [EEnvironment.Production],
-          configService.getOrThrow('NODE_ENV'),
-        ) &&
-          forceSync), // Tránh dùng trên production có thể gây mất dữ liệu
+        // false ||
+        // (!_.includes(
+        //   [EEnvironment.Production],
+        //   configService.getOrThrow('NODE_ENV'),
+        // ) &&
+        //   forceSync), // Tránh dùng trên production có thể gây mất dữ liệu
+        forceSync,
       logging: true,
     }
   },

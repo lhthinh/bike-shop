@@ -10,7 +10,10 @@ import CoreEntity from '../core-entity'
 import { Brand } from '../_common/brand.entity'
 import { Bike } from '../_common/bike.entity'
 
-@Entity({ schema: '_booking', name: 'booking' })
+@Entity({
+  // schema: '_booking',
+  name: 'booking',
+})
 export class Booking extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string

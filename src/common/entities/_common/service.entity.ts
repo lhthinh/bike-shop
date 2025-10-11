@@ -1,7 +1,10 @@
 import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm'
 import CoreEntity from '../core-entity'
 
-@Entity({ schema: '_common', name: 'service' })
+@Entity({
+  // schema: '_common',
+  name: 'service',
+})
 export class UserDevice extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
