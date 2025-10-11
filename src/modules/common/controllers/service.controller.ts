@@ -2,11 +2,14 @@ import { Controller, Get } from '@nestjs/common'
 import { GetBikeDto } from '../dto/get-bike.dto'
 import { BikeService } from '../services/bike.service'
 import { ServiceService } from '../services/service.service'
+import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger'
 
-@Controller('service')
+@ApiTags('Common')
+@Controller('common/service')
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
+  @ApiExcludeEndpoint()
   @Get('init')
   async initService() {
     return await this.serviceService.initService()

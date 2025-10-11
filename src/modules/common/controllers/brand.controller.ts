@@ -1,11 +1,14 @@
 import { Controller, Get } from '@nestjs/common'
 import { GetBrandDto } from '../dto/get-brand.dto'
 import { BrandService } from '../services/brand.service'
+import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger'
 
-@Controller('brand')
+@ApiTags('Common')
+@Controller('common/brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
 
+  @ApiExcludeEndpoint()
   @Get('init')
   async initBrand() {
     return await this.brandService.initBrand()
