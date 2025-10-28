@@ -13,30 +13,36 @@ import { CreateBikeGenerationDto } from '../dto/bike-generation/create-bike-gene
 import { GetBikeGenerationDto } from '../dto/bike-generation/get-bike-generation.dto'
 import { UpdateBikeGenerationDto } from '../dto/bike-generation/update-bike-generation.dto'
 import { ServiceCategoryService } from '../services/service-category.service'
+import { GetServiceCategoryDto } from '../dto/service-category/get-service-category.dto'
+import { CreateServiceCategoryDto } from '../dto/service-category/create-service-category.dto'
+import { UpdateServiceCategoryDto } from '../dto/service-category/update-service-category.dto'
 
 @ApiTags('Common/ServiceCategory')
 @Controller('common/service-category')
-export class BikeTypeController {
+export class ServiceCategoryController {
   constructor(
     private readonly serviceCategoryService: ServiceCategoryService,
   ) {}
 
   @Get('')
-  async find(@Query() getBikeGenerationDto: GetBikeGenerationDto) {
-    return await this.serviceCategoryService.find(getBikeGenerationDto)
+  async find(@Query() getServiceCategoryDto: GetServiceCategoryDto) {
+    return await this.serviceCategoryService.find(getServiceCategoryDto)
   }
 
   @Post()
-  async create(@Body() createBikeGenerationDto: CreateBikeGenerationDto) {
-    return await this.serviceCategoryService.create(createBikeGenerationDto)
+  async create(@Body() createServiceCategoryDto: CreateServiceCategoryDto) {
+    return await this.serviceCategoryService.create(createServiceCategoryDto)
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateBikeGenerationDto: UpdateBikeGenerationDto,
+    @Body() updateServiceCategoryDto: UpdateServiceCategoryDto,
   ) {
-    return await this.serviceCategoryService.update(id, updateBikeGenerationDto)
+    return await this.serviceCategoryService.update(
+      id,
+      updateServiceCategoryDto,
+    )
   }
 
   @Delete(':id')

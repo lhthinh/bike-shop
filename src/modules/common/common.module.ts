@@ -24,6 +24,13 @@ import { CapacityService } from './services/capacity.service'
 import { Capacity } from 'src/common/entities/_common/capacity.entity'
 import { BikeType } from 'src/common/entities/_common/bike-type.entity'
 import { BikeGeneration } from 'src/common/entities/_common/bike-generation'
+import { ServiceCategory } from 'src/common/entities/_common/service-category.entity'
+import { BikeTypeController } from './controllers/bike-type.controller'
+import { BikeGenerationService } from './services/bike-generation.service'
+import { ServiceCategoryController } from './controllers/service-category.controller'
+import { BikeGenerationController } from './controllers/bike-generation.controller'
+import { BikeTypeService } from './services/bike-type.service'
+import { ServiceCategoryService } from './services/service-category.service'
 
 @Module({
   imports: [
@@ -37,6 +44,7 @@ import { BikeGeneration } from 'src/common/entities/_common/bike-generation'
       Capacity,
       BikeType,
       BikeGeneration,
+      ServiceCategory,
     ]),
     UploadModule,
   ],
@@ -48,6 +56,9 @@ import { BikeGeneration } from 'src/common/entities/_common/bike-generation'
     ProductCategoryController,
     ProductController,
     CapacityController,
+    BikeTypeController,
+    BikeGenerationController,
+    ServiceCategoryController,
   ],
   providers: [
     BrandService,
@@ -57,6 +68,9 @@ import { BikeGeneration } from 'src/common/entities/_common/bike-generation'
     ProductCategoryService,
     ProductService,
     CapacityService,
+    BikeTypeService,
+    BikeGenerationService,
+    ServiceCategoryService,
   ],
   exports: [BrandService, BikeService, ServiceService, StoreService],
 })

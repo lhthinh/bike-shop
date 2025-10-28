@@ -16,7 +16,7 @@ import { BikeGenerationService } from '../services/bike-generation.service'
 
 @ApiTags('Common/BikeGeneration')
 @Controller('common/bike-generation')
-export class BikeTypeController {
+export class BikeGenerationController {
   constructor(private readonly bikeGenerationService: BikeGenerationService) {}
 
   @Get('')
