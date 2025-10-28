@@ -2,11 +2,14 @@ import {
   Column,
   Entity,
   Generated,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import CoreEntity from '../core-entity'
 import { Booking } from '../_booking/booking.entity'
+import { ServiceCategory } from './service-category.entity'
 
 @Entity({
   // schema: '_common',
@@ -24,6 +27,16 @@ export class Service extends CoreEntity {
 
   @Column({ name: 'description', type: 'varchar', default: '' })
   description: string
+
+  @Column({ name: 'service_category_id', type: 'varchar', nullable: true })
+  serviceCategoryId: string
+
+  @ManyToOne(
+    () => ServiceCategory,
+    (serviceCategory) => serviceCategory.service,
+  )
+  @JoinColumn({ name: 'service_category_id', referencedColumnName: 'id' })
+  serviceCategory: ServiceCategory[]
 
   @OneToMany(() => Booking, (booking) => booking.service)
   booking: Booking[]

@@ -28,7 +28,10 @@ export class ProductService {
   ) {
     const { productCategoryId, description, name, price } = createProductDto
     const uploadFilePath = uploadFile.path
-    const { id: uploadFileId } = await this.uploadService.upload(uploadFilePath)
+    let uploadFileId = null
+    if (uploadFilePath) {
+      uploadFileId = (await this.uploadService.upload(uploadFilePath)).id
+    }
     if (productCategoryId) {
       const productCate =
         await this.productCategoryService.getOneById(productCategoryId)

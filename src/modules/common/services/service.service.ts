@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Service } from 'src/common/entities/_common/service.entity'
-import { Like, Repository } from 'typeorm'
+import { ILike, Like, Repository } from 'typeorm'
 import { GetBrandDto } from '../dto/brand/get-brand.dto'
 import { GetServiceDto } from '../dto/service/get-service.dto'
 import { Booking } from 'src/common/entities/_booking/booking.entity'
@@ -14,30 +14,38 @@ export class ServiceService {
     private readonly serviceRepository: Repository<Service>,
   ) {}
 
-  async getService(getServiceDto: GetServiceDto) {
+  async find(getServiceDto: GetServiceDto) {
     const { search } = getServiceDto || {}
     return await this.serviceRepository.find({
       select: { name: true, id: true },
       where: {
-        name: Like(`%${search || ''}%`),
+        name: ILike(`%${search || ''}%`),
       },
     })
   }
 
-  async getOneById(id: string) {
+  async findOne(id: string) {
     return await this.serviceRepository.findOneBy({ id })
   }
 
-  async createService(createServiceDto: CreateServiceDto) {
-    const { description, name, price } = createServiceDto
+  async findByServiceCategoryId(serviceCategoryId: string) {
+    return await this.serviceRepository.findBy({ serviceCategoryId })
+  }
+
+  async create(createServiceDto: CreateServiceDto) {
+    const { description, name, price, serviceCategoryId } = createServiceDto
+    if (!serviceCategoryId) {
+      throw new BadRequestException('Vui lòng chọn danh mục dịch vụ')
+    }
     return await this.serviceRepository.save({
       description,
+      serviceCategoryId,
       name,
       price,
     })
   }
 
-  async updateService(id: string, createServiceDto: CreateServiceDto) {
+  async update(id: string, createServiceDto: CreateServiceDto) {
     const { description, name, price } = createServiceDto
     return await this.serviceRepository.save({
       id,
@@ -47,7 +55,7 @@ export class ServiceService {
     })
   }
 
-  async getHotService() {
+  async findHot() {
     const posts = await this.serviceRepository
       .createQueryBuilder('s')
       .select('s.id, s.name, s.description, s.price')

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator'
 import { PaginationDTO } from 'src/common/dtos/pagination.dto'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
@@ -21,4 +21,9 @@ export class CreateServiceDto {
   @Type(() => String)
   @Trim()
   description: string
+
+  @ApiProperty({ example: '' })
+  @IsUUID()
+  @Type(() => String)
+  serviceCategoryId: string
 }

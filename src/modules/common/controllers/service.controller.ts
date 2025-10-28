@@ -13,22 +13,22 @@ export class ServiceController {
 
   @Get()
   async getBike(@Query() getBikeDto: GetBikeDto) {
-    return await this.serviceService.getService(getBikeDto)
+    return await this.serviceService.find(getBikeDto)
   }
 
   @Get(':id')
   async getOneById(@Param('id') id: string) {
-    return await this.serviceService.getOneById(id)
+    return await this.serviceService.findOne(id)
   }
 
   @Get('hot-service')
   async getHotService() {
-    return await this.serviceService.getHotService()
+    return await this.serviceService.findHot()
   }
 
   @Post()
   async createService(@Body() createServiceDto: CreateServiceDto) {
-    return await this.serviceService.createService(createServiceDto)
+    return await this.serviceService.create(createServiceDto)
   }
 
   @Put(':id')
@@ -36,6 +36,6 @@ export class ServiceController {
     @Param('id') id: string,
     @Body() updateServiceDto: UpdateServiceDto,
   ) {
-    return await this.serviceService.updateService(id, updateServiceDto)
+    return await this.serviceService.update(id, updateServiceDto)
   }
 }

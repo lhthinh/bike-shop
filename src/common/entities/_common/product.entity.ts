@@ -40,7 +40,7 @@ export class Product extends CoreEntity {
   @JoinColumn({ name: 'product_category_id', referencedColumnName: 'id' })
   productCategory: ProductCategory
 
-  @Column({ name: 'upload_id', type: 'varchar', unique: true })
+  @Column({ name: 'upload_id', type: 'varchar', unique: true, nullable: true })
   uploadId: string
 
   @OneToOne(() => Upload, (upload) => upload.product)
