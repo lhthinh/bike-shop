@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional, IsString } from 'class-validator'
+import { IsOptional, IsString, IsUUID } from 'class-validator'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
-export class CreateBikeTypeDto {
+export class CreateBikeGenerationDto {
   @ApiProperty({ example: '', required: false })
   @IsOptional()
   @IsString()

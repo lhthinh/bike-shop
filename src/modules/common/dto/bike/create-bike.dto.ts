@@ -15,4 +15,19 @@ export class CreateBikeDto {
   @IsOptional()
   @IsUUID()
   brandId: string
+
+  @ApiProperty({ example: '', required: false })
+  @IsOptional()
+  @IsUUID()
+  capacityId: string
+
+  @ApiProperty({ example: '', required: false })
+  @IsOptional()
+  @IsUUID()
+  bikeTypeId: string
+
+  @ApiProperty({ example: '', required: false })
+  @IsOptional()
+  @IsUUID()
+  bikeGenerationId: string
 }

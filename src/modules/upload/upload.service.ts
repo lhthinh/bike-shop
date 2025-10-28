@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { unlink } from 'fs'
+import path from 'path'
 import { Upload } from 'src/common/entities/_upload/upload.entity'
 import { Repository } from 'typeorm'
-
+import fs from 'fs'
 @Injectable()
 export class UploadService {
   constructor(
@@ -22,5 +23,16 @@ export class UploadService {
         this.uploadRepository.save({ ...file, isActive: false })
       })
     }
+  }
+
+  async getImageProduct() {
+    const result = []
+    const files = fs.readdirSync(
+      path.join(__dirname, '..', '..', '..', 'files', 'product'),
+    )
+    for await (const file of files) {
+      result.push('/files/product/' + file)
+    }
+    return result
   }
 }

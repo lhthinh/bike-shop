@@ -40,8 +40,8 @@ export class BrandService {
   }
 
   async deleteBrand(id: string) {
-    const bikes = await this.bikeService.getBikeByBrandId(id)
-    await this.bikeService.removeBikes(bikes)
+    const bikes = await this.bikeService.findByBrandId(id)
+    await this.bikeService.removes(bikes)
     return await this.brandRepository.delete({
       id,
     })
