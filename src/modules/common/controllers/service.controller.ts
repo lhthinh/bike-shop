@@ -16,14 +16,14 @@ export class ServiceController {
     return await this.serviceService.find(getBikeDto)
   }
 
-  @Get(':id')
-  async getOneById(@Param('id') id: string) {
-    return await this.serviceService.findOne(id)
-  }
-
   @Get('hot-service')
   async getHotService() {
     return await this.serviceService.findHot()
+  }
+
+  @Get(':id')
+  async getOneById(@Param('id') id: string) {
+    return await this.serviceService.findOne(id)
   }
 
   @Post()
