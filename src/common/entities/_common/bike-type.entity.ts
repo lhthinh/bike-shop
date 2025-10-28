@@ -5,18 +5,15 @@ import { Bike } from './bike.entity'
 
 @Entity({
   // schema: '_common',
-  name: 'brand',
+  name: 'bike_type',
 })
-export class Brand extends CoreEntity {
+export class BikeType extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
   @Column({ name: 'name', type: 'varchar' })
   name: string
 
-  @OneToMany(() => Bike, (bike) => bike.brand)
+  @OneToMany(() => Bike, (bike) => bike.capacity)
   bike: Bike[]
-
-  @OneToMany(() => Booking, (booking) => booking.brand)
-  booking: Booking[]
 }

@@ -10,9 +10,6 @@ export class Store extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ name: 'code', type: 'varchar', unique: true })
-  code: string
-
   @Column({ name: 'name', type: 'varchar' })
   name: string
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { BookingService } from '../services/booking.service'
 import { CreateBookingDto } from '../dto/create-booking.dto'
 import { GetBookingFeeDto } from '../dto/get-booking-fee.dto '
@@ -16,5 +16,10 @@ export class BookingController {
   @Post('fee')
   async getBookingFee(@Body() getBookingFee: GetBookingFeeDto) {
     return await this.bookingService.getBookingFee(getBookingFee)
+  }
+
+  @Get()
+  async getBooking() {
+
   }
 }

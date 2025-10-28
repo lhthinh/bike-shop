@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
 export class GetBookingFeeDto {
@@ -8,8 +8,8 @@ export class GetBookingFeeDto {
   @IsOptional()
   @Type(() => String)
   @Trim()
-  @IsString()
-  storeCode: string
+  @IsUUID()
+  storeId: string
 
   @ApiProperty({ example: '' })
   @IsOptional()

@@ -1,12 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional, IsString } from 'class-validator'
+import { Type } from 'class-transformer'
+import { IsOptional, IsString, IsUUID } from 'class-validator'
 import { PaginationDTO } from 'src/common/dtos/pagination.dto'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
-export class GetBrandDto {
+export class CreateBikeDto {
   @ApiProperty({ example: '', required: false })
   @IsOptional()
   @IsString()
   @Trim()
-  search: string
+  name: string
+
+  @ApiProperty({ example: '', required: false })
+  @IsOptional()
+  @IsUUID()
+  brandId: string
 }

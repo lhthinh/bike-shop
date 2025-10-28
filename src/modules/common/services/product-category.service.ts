@@ -2,9 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ProductCategory } from 'src/common/entities/_common/product-category.entity'
 import { ILike, Like, Repository } from 'typeorm'
-import { GetProductCategoryDto } from '../dto/get-product-category.dto'
-import { CreateProductCategoryDto } from '../dto/create-product-category.dto'
-import { UpdateProductCategoryDto } from '../dto/update-product-category.dto'
+import { GetProductCategoryDto } from '../dto/product-category/get-product-category.dto'
+import { CreateProductCategoryDto } from '../dto/product-category/create-product-category.dto'
+import { UpdateProductCategoryDto } from '../dto/product-category/update-product-category.dto'
 
 @Injectable()
 export class ProductCategoryService {
@@ -12,17 +12,6 @@ export class ProductCategoryService {
     @InjectRepository(ProductCategory)
     private readonly productCategoryRepository: Repository<ProductCategory>,
   ) {}
-
-  async initProductCategory() {
-    const service: Partial<ProductCategory>[] = [
-      {
-        name: 'Nhớt động cơ',
-        description: 'Nhớt động cơ',
-      },
-    ]
-
-    return await this.productCategoryRepository.save(service)
-  }
 
   async createProductCategory(
     createProductCategoryDto: CreateProductCategoryDto,

@@ -19,6 +19,11 @@ import { Product } from 'src/common/entities/_common/product.entity'
 import { ProductController } from './controllers/product.controller'
 import { ProductService } from './services/product.service'
 import { UploadModule } from '../upload/upload.module'
+import { CapacityController } from './controllers/capacity.controller'
+import { CapacityService } from './services/capacity.service'
+import { Capacity } from 'src/common/entities/_common/capacity.entity'
+import { BikeType } from 'src/common/entities/_common/bike-type.entity'
+import { BikeGeneration } from 'src/common/entities/_common/bike-generation'
 
 @Module({
   imports: [
@@ -29,6 +34,9 @@ import { UploadModule } from '../upload/upload.module'
       Store,
       ProductCategory,
       Product,
+      Capacity,
+      BikeType,
+      BikeGeneration,
     ]),
     UploadModule,
   ],
@@ -39,6 +47,7 @@ import { UploadModule } from '../upload/upload.module'
     StoreController,
     ProductCategoryController,
     ProductController,
+    CapacityController,
   ],
   providers: [
     BrandService,
@@ -47,6 +56,7 @@ import { UploadModule } from '../upload/upload.module'
     StoreService,
     ProductCategoryService,
     ProductService,
+    CapacityService,
   ],
   exports: [BrandService, BikeService, ServiceService, StoreService],
 })

@@ -7,10 +7,23 @@ import { GetBookingFeeDto } from '../dto/get-booking-fee.dto '
 import { GetDistanceDto } from '../dto/get-distance.dto '
 import moment from 'moment'
 import { getHourMinuteSecond } from 'src/common/utils/time.util'
-import axios from 'axios'
 import { StoreService } from 'src/modules/common/services/store.service'
 import { HttpService } from '@nestjs/axios'
-
+const dataTest = {
+  type: 1,
+  fullName: 'Lê Hoàng Thịnh',
+  phoneNumber: '0931053876',
+  license: '77-AE 05387',
+  bookingDate: '2025-10-29T17:00:00.000Z',
+  bookingTimeFrom: '9:30',
+  bookingTimeTo: '10:30',
+  note: 'Hãy gọi cho tôi trước khi đến',
+  brandId: '',
+  bikeId: '',
+  serviceId: '782651b5-c1ac-4cd3-b8d8-3c14921e5320',
+  storeId: '61df3fc4-bc48-4052-8f71-c846eb3c2e4c',
+  bookingAddress: '398 Lê Trọng Tấn',
+}
 const map_key = 'Ib7L9Aqchp0rvybt7PKmEz0xkYTP2jLWMvQeYyyC'
 @Injectable()
 export class BookingService {
@@ -45,11 +58,11 @@ export class BookingService {
       type,
       fullName,
       phoneNumber,
-      brandCode,
-      bikeCode,
+      brandId,
+      bikeId,
       license,
-      serviceCode,
-      storeCode,
+      serviceId,
+      storeId,
       bookingDate,
       bookingTimeFrom,
       bookingTimeTo,
@@ -86,18 +99,18 @@ export class BookingService {
       bookingTo,
       bookingAddress,
       note,
-      brandCode,
-      storeCode: storeCode || null,
-      bikeCode,
-      serviceCode,
+      brandId: brandId || null,
+      storeId: storeId || null,
+      bikeId: bikeId || null,
+      serviceId: serviceId || null,
     }
     return await this.bookingRepository.save(data)
   }
 
   async getBookingFee(getBookingFeeDto: GetBookingFeeDto) {
-    const { bookingAddress, storeCode, inOfficeTime } = getBookingFeeDto
+    const { bookingAddress, storeId, inOfficeTime } = getBookingFeeDto
 
-    const store = await this.storeService.getOne(storeCode)
+    const store = await this.storeService.getOne(storeId)
     //?api_key=Ib7L9Aqchp0rvybt7PKmEz0xkYTP2jLWMvQeYyyC&address=398 Lê Trọng Tấn, Phường Tây Thạnh, Quận Tân Phú, Thành phố Hồ Chí Minh
     const url = 'https://rsapi.goong.io/geocode'
     const getLatLngBookingAddress = await this.httpService.axiosRef.get(url, {

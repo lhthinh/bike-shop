@@ -1,8 +1,9 @@
 import { Injectable, Search } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Like, Repository } from 'typeorm'
-import { GetBikeDto } from '../dto/get-bike.dto'
+import { GetBikeDto } from '../dto/bike/get-bike.dto'
 import { Bike } from 'src/common/entities/_common/bike.entity'
+import { CreateBikeDto } from '../dto/bike/create-bike.dto'
 
 @Injectable()
 export class BikeService {
@@ -11,24 +12,26 @@ export class BikeService {
     private readonly bikeRepository: Repository<Bike>,
   ) {}
 
-  async initBike() {
-    const bike: Partial<Bike>[] = [
-      {
-        code: 'AB_2025_125',
-        name: 'Air Blade 2025 125cc',
-      },
-    ]
-
-    return await this.bikeRepository.save(bike)
-  }
-
   async getBike(getBikeDto: GetBikeDto) {
     const { search } = getBikeDto || {}
     return await this.bikeRepository.find({
-      select: { name: true, code: true },
+      select: { name: true, id: true },
       where: {
         name: Like(`%${search || ''}%`),
       },
     })
+  }
+
+  async getBikeByBrandId(brandId: string) {
+    return await this.bikeRepository.find({ where: { brandId } })
+  }
+
+  async createBike(createBikeDto: CreateBikeDto) {
+    const { brandId, name } = createBikeDto
+    
+  }
+
+  async removeBikes(bikes: Bike[]) {
+    await this.bikeRepository.remove(bikes)
   }
 }

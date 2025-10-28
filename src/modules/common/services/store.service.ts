@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Service } from 'src/common/entities/_common/service.entity'
 import { Like, Repository } from 'typeorm'
-import { GetBrandDto } from '../dto/get-brand.dto'
+import { GetBrandDto } from '../dto/brand/get-brand.dto'
 import { Store } from 'src/common/entities/_common/store.entity'
-import { GetStoreDto } from '../dto/get-store.dto'
+import { GetStoreDto } from '../dto/store/get-store.dto'
 
 @Injectable()
 export class StoreService {
@@ -16,7 +16,6 @@ export class StoreService {
   async initStore() {
     const store: Partial<Store>[] = [
       {
-        code: '19ANVV',
         name: '19A Nguyễn Văn Vịnh',
         lat: 10.768721,
         lng: 106.630164,
@@ -28,16 +27,17 @@ export class StoreService {
 
   async getStore(getStoreDto: GetStoreDto) {
     const { search } = getStoreDto || {}
-    return await this.storeRepository.find({select: {name: true , code : true},
+    return await this.storeRepository.find({
+      select: { name: true, id: true },
       where: {
         name: Like(`%${search || ''}%`),
       },
     })
   }
 
-  async getOne(code: string) {
+  async getOne(id: string) {
     return await this.storeRepository.findOne({
-      where: { code },
+      where: { id },
     })
   }
 }

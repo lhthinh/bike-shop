@@ -12,11 +12,11 @@ import {
 } from '@nestjs/common'
 import { ApiConsumes, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger'
 import { ProductService } from '../services/product.service'
-import { CreateProductDto } from '../dto/create-product.dto'
-import { GetProductDto } from '../dto/get-product.dto'
+import { CreateProductDto } from '../dto/product/create-product.dto'
+import { GetProductDto } from '../dto/product/get-product.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { uploadProductImage } from 'src/common/configs/multer.config'
-import { UpdateProductDto } from '../dto/update-product.dto'
+import { UpdateProductDto } from '../dto/product/update-product.dto'
 
 @ApiTags('Common/Product')
 @Controller('common/product')

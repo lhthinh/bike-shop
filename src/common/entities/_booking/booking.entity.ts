@@ -45,34 +45,34 @@ export class Booking extends CoreEntity {
   bookingAddress: string
 
   @ManyToOne(() => Brand, (brand) => brand.booking)
-  @JoinColumn({ name: 'brand_code', referencedColumnName: 'code' })
+  @JoinColumn({ name: 'brand_id', referencedColumnName: 'id' })
   brand: Brand
 
-  @Column({ name: 'brand_code', type: 'varchar', nullable: true })
-  brandCode: string
+  @Column({ name: 'brand_id', type: 'varchar', nullable: true })
+  brandId: string
 
   @ManyToOne(() => Bike, (bike) => bike.booking)
-  @JoinColumn({ name: 'bike_code', referencedColumnName: 'code' })
+  @JoinColumn({ name: 'bike_id', referencedColumnName: 'id' })
   bike: Bike
 
-  @Column({ name: 'bike_code', type: 'varchar', nullable: true })
-  bikeCode: string
+  @Column({ name: 'bike_id', type: 'varchar', nullable: true })
+  bikeId: string
 
   @ManyToOne(() => Store, (store) => store.booking)
-  @JoinColumn({ name: 'store_code', referencedColumnName: 'code' })
+  @JoinColumn({ name: 'store_id', referencedColumnName: 'id' })
   store: Store
 
   @Column({
-    name: 'store_code',
+    name: 'store_id',
     type: 'varchar',
     nullable: true,
   })
-  storeCode: string
+  storeId: string
 
   @ManyToOne(() => Service, (service) => service.booking)
-  @JoinColumn({ name: 'service_code', referencedColumnName: 'code' })
+  @JoinColumn({ name: 'service_id', referencedColumnName: 'id' })
   service: Service
 
-  @Column({ name: 'service_code', type: 'varchar', nullable: true })
-  serviceCode: string
+  @Column({ name: 'service_id', type: 'varchar', nullable: true })
+  serviceId: string
 }

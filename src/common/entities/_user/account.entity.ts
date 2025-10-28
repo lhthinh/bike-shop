@@ -27,10 +27,10 @@ export class Account extends CoreEntity {
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean
 
-  @Column({ name: 'user_code', type: 'varchar', unique: true })
+  @Column({ name: 'user_id', type: 'varchar', unique: true })
   userCode: string
 
   @OneToOne(() => User, (user) => user.account)
-  @JoinColumn([{ name: 'user_code', referencedColumnName: 'code' }])
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User
 }

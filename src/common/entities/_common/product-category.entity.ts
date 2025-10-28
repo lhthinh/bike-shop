@@ -16,7 +16,7 @@ import { Product } from './product.entity'
 export class ProductCategory extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
-  ƒ
+  
   @Column({ name: 'name', type: 'varchar' })
   name: string
 

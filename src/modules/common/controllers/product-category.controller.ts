@@ -9,10 +9,10 @@ import {
   Query,
 } from '@nestjs/common'
 import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger'
-import { GetProductCategoryDto } from '../dto/get-product-category.dto'
+import { GetProductCategoryDto } from '../dto/product-category/get-product-category.dto'
 import { ProductCategoryService } from '../services/product-category.service'
-import { CreateProductCategoryDto } from '../dto/create-product-category.dto'
-import { UpdateProductCategoryDto } from '../dto/update-product-category.dto'
+import { CreateProductCategoryDto } from '../dto/product-category/create-product-category.dto'
+import { UpdateProductCategoryDto } from '../dto/product-category/update-product-category.dto'
 
 @ApiTags('Common/ProductCategory')
 @Controller('common/product-category')
@@ -20,12 +20,6 @@ export class ProductCategoryController {
   constructor(
     private readonly productCategoryService: ProductCategoryService,
   ) {}
-
-  @ApiExcludeEndpoint()
-  @Get('init')
-  async initService() {
-    return await this.productCategoryService.initProductCategory()
-  }
 
   @Post()
   async createProductCategoryDto(

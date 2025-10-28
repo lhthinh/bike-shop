@@ -63,28 +63,28 @@ export class CreateBookingDto {
   @Type(() => String)
   @Trim()
   @IsString()
-  brandCode: string
+  brandId: string
 
   @ApiProperty({ example: '' })
   @IsOptional()
   @Type(() => String)
   @Trim()
   @IsString()
-  bikeCode: string
+  bikeId: string
 
   @ApiProperty({ example: '' })
   @IsOptional()
   @Type(() => String)
   @Trim()
   @IsString()
-  serviceCode: string
+  serviceId: string
 
   @ApiProperty({ example: '' })
   @IsOptional()
   @Type(() => String)
   @Trim()
   @IsString()
-  storeCode: string
+  storeId: string
 
   @ApiProperty({ example: '' })
   @IsOptional()
