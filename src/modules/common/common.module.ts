@@ -12,16 +12,42 @@ import { Service } from 'src/common/entities/_common/service.entity'
 import { Store } from 'src/common/entities/_common/store.entity'
 import { StoreController } from './controllers/store.controller'
 import { StoreService } from './services/store.service'
+import { ProductCategoryController } from './controllers/product-category.controller'
+import { ProductCategoryService } from './services/product-category.service'
+import { ProductCategory } from 'src/common/entities/_common/product-category.entity'
+import { Product } from 'src/common/entities/_common/product.entity'
+import { ProductController } from './controllers/product.controller'
+import { ProductService } from './services/product.service'
+import { UploadModule } from '../upload/upload.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Brand, Bike, Service, Store])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Brand,
+      Bike,
+      Service,
+      Store,
+      ProductCategory,
+      Product,
+    ]),
+    UploadModule,
+  ],
   controllers: [
     BrandController,
     BikeController,
     ServiceController,
     StoreController,
+    ProductCategoryController,
+    ProductController,
   ],
-  providers: [BrandService, BikeService, ServiceService, StoreService],
+  providers: [
+    BrandService,
+    BikeService,
+    ServiceService,
+    StoreService,
+    ProductCategoryService,
+    ProductService,
+  ],
   exports: [BrandService, BikeService, ServiceService, StoreService],
 })
 export class CommonModule {}

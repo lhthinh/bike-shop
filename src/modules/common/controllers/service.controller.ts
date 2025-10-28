@@ -19,4 +19,9 @@ export class ServiceController {
   async getBike(@Query() getBikeDto: GetBikeDto) {
     return await this.serviceService.getService(getBikeDto)
   }
+
+  @Get('hot-service')
+  async getHotService() {
+    return await this.serviceService.getHotService()
+  }
 }

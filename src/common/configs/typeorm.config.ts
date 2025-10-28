@@ -13,7 +13,6 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
     const port = parseInt(configService.getOrThrow('POSTGRES_PORT'))
     const database = configService.getOrThrow('POSTGRES_DATABASE')
     const forceSync = configService.get('POSTGRES_FORCE_SYNC') === 'true'
-    console.log(path.join(__dirname, '..'), 'path.join')
     return {
       type: 'postgres',
       host,

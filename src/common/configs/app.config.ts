@@ -9,7 +9,8 @@ export const PREFIX_WEBSOCKET = process.env.PREFIX_WEBSOCKET || ''
 export const TIME_ZONE = process.env.TIME_ZONE || 'Asia/Ho_Chi_Minh'
 
 export const JWT_PUBLIC_KEY = process.env.JWT_PUBLIC_KEY
-export const JWT_ACCESS_TOKEN_SECRET_KEY = process.env.JWT_ACCESS_TOKEN_SECRET_KEY
+export const JWT_ACCESS_TOKEN_SECRET_KEY =
+  process.env.JWT_ACCESS_TOKEN_SECRET_KEY
 
 export const MINIO_PRIVATE_URL = process.env.MINIO_PRIVATE_URL || ''
 export const MINIO_PUBLIC_URL = process.env.MINIO_PUBLIC_URL || ''

@@ -24,7 +24,6 @@ export class BookingService {
   async getDistance(getDistanceDto: GetDistanceDto) {
     const { from, to } = getDistanceDto
     const url = `https://rsapi.goong.io/DistanceMatrix`
-    console.log(from, to, 'from ,to')
     const result = await this.httpService.axiosRef.get(url, {
       params: {
         api_key: map_key,
@@ -88,7 +87,7 @@ export class BookingService {
       bookingAddress,
       note,
       brandCode,
-      storeCode : storeCode || null,
+      storeCode: storeCode || null,
       bikeCode,
       serviceCode,
     }
@@ -96,7 +95,7 @@ export class BookingService {
   }
 
   async getBookingFee(getBookingFeeDto: GetBookingFeeDto) {
-    const { bookingAddress, storeCode } = getBookingFeeDto
+    const { bookingAddress, storeCode, inOfficeTime } = getBookingFeeDto
 
     const store = await this.storeService.getOne(storeCode)
     //?api_key=Ib7L9Aqchp0rvybt7PKmEz0xkYTP2jLWMvQeYyyC&address=398 Lê Trọng Tấn, Phường Tây Thạnh, Quận Tân Phú, Thành phố Hồ Chí Minh
@@ -107,7 +106,6 @@ export class BookingService {
         api_key: map_key,
       },
     })
-    console.log(getLatLngBookingAddress.data?.results[0]?.geometry, 'dataa')
     const latLngBookingAddress =
       getLatLngBookingAddress.data?.results[0]?.geometry?.location
     if (!latLngBookingAddress) {
@@ -119,8 +117,14 @@ export class BookingService {
       to: `${store?.lat},${store?.lng}`,
     })
     const distanceInKilomiter = distanceInMeter / 1000
-    const fee = distanceInKilomiter < 3 ? 0 : (distanceInKilomiter - 3) * 30000
+    const fee =
+      distanceInKilomiter < 3
+        ? 0
+        : (distanceInKilomiter - 3) * (inOfficeTime ? 30000 : 45000)
 
-    return Math.round(fee / 1000) * 1000
+    return {
+      fee: Math.round(fee / 1000) * 1000,
+      distanceInKilomiter: distanceInKilomiter,
+    }
   }
 }

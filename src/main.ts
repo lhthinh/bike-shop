@@ -8,9 +8,10 @@ import { NestExpressApplication } from '@nestjs/platform-express'
 import { ENVIRONMENT, PORT } from './common/configs/app.config'
 import { SwaggerModule } from '@nestjs/swagger'
 import { swaggerConfig } from './common/configs/swagger.config'
-import { swaggerOptions } from './common/configs/swagger.config copy'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 import { AllExceptionFilter } from './common/filters/all-exception.filter'
+import { swaggerOptions } from './common/configs/swagger-options.config'
+import path from 'path'
 
 async function bootstrap() {
   initializeTransactionalContext({ storageDriver: StorageDriver.AUTO })
@@ -20,6 +21,9 @@ async function bootstrap() {
   app.enableCors()
   app.useGlobalFilters(new AllExceptionFilter(app.get(HttpAdapterHost)))
   app.useGlobalInterceptors(new TransformInterceptor())
+  app.useStaticAssets(path.resolve('files', 'product'), {
+    prefix: '/files/product/',
+  })
   const document = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('swagger-ui', app, document, swaggerOptions)
   await app.listen(PORT, '0.0.0.0', () => {

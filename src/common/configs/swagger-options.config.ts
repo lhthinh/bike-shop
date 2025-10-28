@@ -5,6 +5,7 @@ export const swaggerOptions: SwaggerCustomOptions = {
     persistAuthorization: true,
     tagsSorter: 'alpha',
     operationsSorter: 'alpha',
+    docExpansion: 'none',
   },
   useGlobalPrefix: true,
   explorer: false,
