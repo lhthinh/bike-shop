@@ -1,5 +1,5 @@
-import { Controller } from '@nestjs/common';
-import { RecruimentService } from './recruiment.service';
+import { Controller } from '@nestjs/common'
+import { RecruimentService } from '../services/recruiment.service'
 
 @Controller('recruiment')
 export class RecruimentController {

@@ -26,10 +26,10 @@ export class Booking extends CoreEntity {
   @Column({ name: 'full_name', type: 'varchar', comment: 'Họ và tên' })
   fullName: string
 
-  @Column({ name: 'phone_number', type: 'varchar', unique: true })
+  @Column({ name: 'phone_number', type: 'varchar' })
   phoneNumber: string
 
-  @Column({ name: 'license', type: 'varchar', unique: true })
+  @Column({ name: 'license', type: 'varchar' })
   license: string
 
   @Column({ name: 'booking_from', type: 'timestamptz', nullable: true })

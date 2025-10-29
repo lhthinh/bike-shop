@@ -10,12 +10,14 @@ import { CommonModule } from './modules/common/common.module'
 import { BookingModule } from './modules/booking/booking.module'
 import { UserModule } from './modules/user/user.module'
 import { AccountModule } from './modules/account/account.module'
-import { RecruimentModule } from './modules/recruiment/recruiment.module'
+import { HRModule } from './modules/hr/hr.module'
 import { JwtModule } from '@nestjs/jwt'
 import { jwtAsyncConfig } from './common/configs/jwt.config'
 import { UploadModule } from './modules/upload/upload.module'
 import { MulterModule } from '@nestjs/platform-express'
 import { multerConfig } from './common/configs/multer.config'
+import { APP_GUARD } from '@nestjs/core'
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard'
 
 @Module({
   imports: [
@@ -28,10 +30,16 @@ import { multerConfig } from './common/configs/multer.config'
     BookingModule,
     UserModule,
     AccountModule,
-    RecruimentModule,
+    HRModule,
     UploadModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
+  ],
 })
 export class AppModule {}

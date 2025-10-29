@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt'
 import { AuthGuard } from '@nestjs/passport'
 import { Request } from 'express'
 import _ from 'lodash'
+import { JWT_PUBLIC_KEY } from 'src/common/configs/app.config'
 import { UserModel } from 'src/common/models/user.model'
 
 @Injectable()
@@ -22,10 +23,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(
-      this.configService.getOrThrow('JWT_PUBLIC_KEY'),
-      [context.getHandler(), context.getClass()],
-    )
+    const isPublic = this.reflector.getAllAndOverride<boolean>(JWT_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ])
 
     if (isPublic) {
       return true

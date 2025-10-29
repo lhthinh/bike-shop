@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { BikeGeneration } from 'src/common/entities/_common/bike-generation'
+import { BikeGeneration } from 'src/common/entities/_common/bike-generation.entity'
 import { ILike, Repository } from 'typeorm'
 import { CreateBikeGenerationDto } from '../dto/bike-generation/create-bike-generation.dto'
 import { GetBikeGenerationDto } from '../dto/bike-generation/get-bike-generation.dto'

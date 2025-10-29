@@ -13,12 +13,14 @@ import { BikeService } from '../services/bike.service'
 import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger'
 import { CreateBikeDto } from '../dto/bike/create-bike.dto'
 import { UpdateBikeDto } from '../dto/bike/update-bike.dto'
+import { Public } from 'src/common/decorators/public.decorator'
 
 @ApiTags('Common/Bike')
 @Controller('common/bike')
 export class BikeController {
   constructor(private readonly bikeService: BikeService) {}
 
+  @Public()
   @Get()
   async find(@Query() getBikeDto: GetBikeDto) {
     return await this.bikeService.find(getBikeDto)
