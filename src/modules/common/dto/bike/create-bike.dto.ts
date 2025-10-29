@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
-import { IsOptional, IsString, IsUUID } from 'class-validator'
-import { PaginationDTO } from 'src/common/dtos/pagination.dto'
+import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
 export class CreateBikeDto {
@@ -16,18 +14,18 @@ export class CreateBikeDto {
   @IsUUID()
   brandId: string
 
-  @ApiProperty({ example: '', required: false })
-  @IsOptional()
+  @ApiProperty({ example: [], required: false })
+  @IsArray()
   @IsUUID()
-  capacityId: string
+  capacityIds: string[]
 
   @ApiProperty({ example: '', required: false })
   @IsOptional()
   @IsUUID()
   bikeTypeId: string
 
-  @ApiProperty({ example: '', required: false })
-  @IsOptional()
+  @ApiProperty({ example: [], required: false })
+  @IsArray()
   @IsUUID()
-  bikeGenerationId: string
+  bikeGenerationIds: string[]
 }

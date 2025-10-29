@@ -14,6 +14,6 @@ export class BikeType extends CoreEntity {
   @Column({ name: 'name', type: 'varchar' })
   name: string
 
-  @OneToMany(() => Bike, (bike) => bike.capacity)
+  @OneToMany(() => Bike, (bike) => bike.bikeType)
   bike: Bike[]
 }
