@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, Search } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { ILike, Like, Repository } from 'typeorm'
+import { DataSource, ILike, Like, Repository } from 'typeorm'
 import { GetBikeDto } from '../dto/bike/get-bike.dto'
 import { Bike } from 'src/common/entities/_common/bike.entity'
 import { CreateBikeDto } from '../dto/bike/create-bike.dto'
@@ -21,38 +21,59 @@ export class BikeService {
 
     @Inject(BikeCapacityService)
     private readonly bikeCapacityService: BikeCapacityService,
+
+    @Inject(DataSource)
+    private readonly dataSource: DataSource,
   ) {}
 
   async find(getBikeDto: GetBikeDto) {
     const { search } = getBikeDto || {}
-    const bikes = await this.bikeRepository.find({
-      relations: {
-        brand: true,
-        bikeType: true,
-        bikeBikeGeneration: { bikeGeneration: true },
-        bikeCapacity: { capacity: true },
-      },
-      where: {
-        name: Like(`%${search || ''}%`),
-      },
-    })
+    const bikes = await this.dataSource.query(`
+  SELECT
+    b.id,
+    b.name,
 
-    const result = _.map(bikes, (item) => ({
-      name: item.name,
-      brand: item.brand,
-      brandId: item.brandId,
-      bikeType: item.bikeType,
-      bikeTypeId: item.bikeTypeId,
-      bikeGeneration: _.map(
-        item.bikeBikeGeneration,
-        (itemBikeGeneration) => itemBikeGeneration.bikeGeneration,
-      ),
-      capacity: _.map(
-        item.bikeCapacity,
-        (itemBikeGeneration) => itemBikeGeneration.capacity,
-      ),
-    }))
-    return result
+    -- brand
+    json_build_object(
+      'id', br.id,
+      'name', br.name
+    ) AS brand,
+
+    -- bike type
+    json_build_object(
+      'id', bt.id,
+      'name', bt.name
+    ) AS "bikeType",
+
+    -- bike generations
+    (
+      SELECT json_agg(json_build_object(
+        'id', bg.id,
+        'name', bg.name
+      ))
+      FROM bike_bike_generation bbg
+      JOIN bike_generation bg ON bg.id = bbg.bike_generation_id
+      WHERE bbg.bike_id = b.id
+    ) AS "bikeGenerations",
+
+    -- capacities
+    (
+      SELECT json_agg(json_build_object(
+        'id', c.id,
+        'name', c.name
+      ))
+      FROM bike_capacity bc
+      JOIN capacity c ON c.id = bc.capacity_id
+      WHERE bc.bike_id = b.id
+    ) AS "capacities"
+
+  FROM bike b
+  LEFT JOIN brand br ON br.id = b.brand_id
+  LEFT JOIN bike_type bt ON bt.id = b.bike_type_id
+  WHERE b.deleted_at IS NULL
+  ORDER BY b.created_at DESC
+`)
+    return bikes
   }
 
   async findByBrandId(brandId: string) {

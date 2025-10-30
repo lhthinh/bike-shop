@@ -10,6 +10,7 @@ import {
 import CoreEntity from '../core-entity'
 import { Booking } from '../_booking/booking.entity'
 import { ServiceCategory } from './service-category.entity'
+import { BikeService } from './bike-service.entity'
 
 @Entity({
   // schema: '_common',
@@ -40,4 +41,7 @@ export class Service extends CoreEntity {
 
   @OneToMany(() => Booking, (booking) => booking.service)
   booking: Booking[]
+
+  @OneToMany(() => BikeService, (type) => type.service)
+  bikeServices: BikeService[]
 }
