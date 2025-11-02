@@ -37,43 +37,59 @@ export class BikeService {
 
   async find(getBikeDto: GetBikeDto) {
     const { search } = getBikeDto || {}
-    const bikes = await this.dataSource
-      .createQueryBuilder('b', 'bike')
-      .select([
-        'b.id',
-        'b.name',
-        // brand
-        `(SELECT br.id, br.name
-      FROM brand br
-      WHERE br.id = b.brand_id
-      FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    ) AS brand`,
-        // bikeType
-        `(SELECT bt.id, bt.name
-      FROM bike_type bt
-      WHERE bt.id = b.bike_type_id
-      FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-    ) AS bikeType`,
-        // bikeGeneration
-        `(SELECT bg.id, bg.name
-      FROM bike_bike_generation bbg
-      JOIN bike_generation bg ON bg.id = bbg.bike_generation_id
-      WHERE bbg.bike_id = b.id
-      FOR JSON PATH
-    ) AS bikeGeneration`,
-        // capacity
-        `(SELECT c.id, c.name
-      FROM bike_capacity bc
-      JOIN capacity c ON c.id = bc.capacity_id
-      WHERE bc.bike_id = b.id
-      FOR JSON PATH
-    ) AS capacity`,
-      ])
-      .from('bike', 'b')
-      .where('b.deleted_at IS NULL')
-      .andWhere('b.name LIKE :search', { search: `%${search || ''}%` })
-      .orderBy('b.created_at', 'DESC')
-      .getRawMany()
+    const bikes = await this.dataSource.query(
+      `
+      SELECT
+        b.id,
+        b.name,
+
+        -- Brand
+        json_build_object(
+          'id', br.id,
+          'name', br.name
+        ) AS brand,
+
+        -- Bike type
+        json_build_object(
+          'id', bt.id,
+          'name', bt.name
+        ) AS "bikeType",
+
+        -- Bike generations
+        (
+          SELECT json_agg(
+            json_build_object(
+              'id', bg.id,
+              'name', bg.name
+            )
+          )
+          FROM bike_bike_generation bbg
+          JOIN bike_generation bg ON bg.id = bbg.bike_generation_id
+          WHERE bbg.bike_id = b.id
+        ) AS "bikeGeneration",
+
+        -- Capacities
+        (
+          SELECT json_agg(
+            json_build_object(
+              'id', c.id,
+              'name', c.name
+            )
+          )
+          FROM bike_capacity bc
+          JOIN capacity c ON c.id = bc.capacity_id
+          WHERE bc.bike_id = b.id
+        ) AS capacity
+
+      FROM bike b
+      LEFT JOIN brand br ON br.id = b.brand_id
+      LEFT JOIN bike_type bt ON bt.id = b.bike_type_id
+      WHERE b.deleted_at IS NULL
+      AND b.name ILIKE $1
+      ORDER BY b.created_at DESC
+    `,
+      [`%${search || ''}%`],
+    )
     return bikes
   }
 

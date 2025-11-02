@@ -15,7 +15,7 @@ export class CreateBikeServiceDto {
   @ApiProperty({ example: '', required: false })
   @IsArray()
   @IsUUID()
-  bikeIds: string
+  bikeIds: string[]
 
   @ApiProperty({ example: '', required: false })
   @IsUUID()
