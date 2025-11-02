@@ -46,6 +46,68 @@ export const multerConfig: MulterOptions = {
   },
 }
 
+export const uploadImageAndVideo: MulterOptions = {
+  limits: {
+    fileSize: Math.pow(1024, 2) * 30,
+    fieldSize: Math.pow(1024, 2) * 30,
+  },
+  fileFilter: (
+    req: Request,
+    file: Express.Multer.File,
+    cb: DestinationCallback,
+  ) => {
+    const ext = mime.extension(file.mimetype)
+    if (
+      file &&
+      _.includes(
+        [
+          // Ảnh
+          'jpg',
+          'jpeg',
+          'png',
+          'gif',
+          'webp',
+          'bmp',
+          'tiff',
+          'svg',
+          'ico',
+          'heic',
+          'heif',
+          // Video
+          'mp4',
+          'mov',
+          'avi',
+          'mkv',
+          'flv',
+          'wmv',
+          'webm',
+          'mpeg',
+          '3gp',
+          '3g2',
+          'ogv',
+        ],
+        ext,
+      )
+    ) {
+      cb(null, true)
+    } else {
+      cb(
+        new BadRequestException(
+          'Upload không thành công — chỉ chấp nhận ảnh hoặc video!',
+        ),
+        false,
+      )
+    }
+  },
+  storage: diskStorage({
+    destination: './files/product',
+    filename: (req: Request, file: Express.Multer.File, cb: any) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+      cb(null, `${uniqueSuffix}_${file.originalname}`)
+    },
+  }),
+}
+
 export const uploadProductImage: MulterOptions = {
   limits: {
     fileSize: Math.pow(1024, 2) * 20,

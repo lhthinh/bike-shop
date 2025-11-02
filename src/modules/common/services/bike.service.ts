@@ -1,6 +1,14 @@
 import { BadRequestException, Inject, Injectable, Search } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { DataSource, ILike, Like, Repository } from 'typeorm'
+import {
+  DataSource,
+  FindOptions,
+  FindOptionsWhere,
+  ILike,
+  Like,
+  Not,
+  Repository,
+} from 'typeorm'
 import { GetBikeDto } from '../dto/bike/get-bike.dto'
 import { Bike } from 'src/common/entities/_common/bike.entity'
 import { CreateBikeDto } from '../dto/bike/create-bike.dto'
@@ -9,6 +17,7 @@ import { Transactional } from 'typeorm-transactional'
 import { BikeBikeGenerationService } from './bike-bike-generation.service'
 import { BikeCapacityService } from './bike-capacity.service'
 import _ from 'lodash'
+import { BikesService } from 'src/common/entities/_common/bike-service.entity'
 
 @Injectable()
 export class BikeService {
@@ -28,56 +37,73 @@ export class BikeService {
 
   async find(getBikeDto: GetBikeDto) {
     const { search } = getBikeDto || {}
-    const bikes = await this.dataSource.query(`
-  SELECT
-    b.id,
-    b.name,
-
-    -- brand
-    json_build_object(
-      'id', br.id,
-      'name', br.name
-    ) AS brand,
-
-    -- bike type
-    json_build_object(
-      'id', bt.id,
-      'name', bt.name
-    ) AS "bikeType",
-
-    -- bike generations
-    (
-      SELECT json_agg(json_build_object(
-        'id', bg.id,
-        'name', bg.name
-      ))
+    const bikes = await this.dataSource
+      .createQueryBuilder('b', 'bike')
+      .select([
+        'b.id',
+        'b.name',
+        // brand
+        `(SELECT br.id, br.name
+      FROM brand br
+      WHERE br.id = b.brand_id
+      FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+    ) AS brand`,
+        // bikeType
+        `(SELECT bt.id, bt.name
+      FROM bike_type bt
+      WHERE bt.id = b.bike_type_id
+      FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+    ) AS bikeType`,
+        // bikeGeneration
+        `(SELECT bg.id, bg.name
       FROM bike_bike_generation bbg
       JOIN bike_generation bg ON bg.id = bbg.bike_generation_id
       WHERE bbg.bike_id = b.id
-    ) AS "bikeGenerations",
-
-    -- capacities
-    (
-      SELECT json_agg(json_build_object(
-        'id', c.id,
-        'name', c.name
-      ))
+      FOR JSON PATH
+    ) AS bikeGeneration`,
+        // capacity
+        `(SELECT c.id, c.name
       FROM bike_capacity bc
       JOIN capacity c ON c.id = bc.capacity_id
       WHERE bc.bike_id = b.id
-    ) AS "capacities"
-
-  FROM bike b
-  LEFT JOIN brand br ON br.id = b.brand_id
-  LEFT JOIN bike_type bt ON bt.id = b.bike_type_id
-  WHERE b.deleted_at IS NULL
-  ORDER BY b.created_at DESC
-`)
+      FOR JSON PATH
+    ) AS capacity`,
+      ])
+      .from('bike', 'b')
+      .where('b.deleted_at IS NULL')
+      .andWhere('b.name LIKE :search', { search: `%${search || ''}%` })
+      .orderBy('b.created_at', 'DESC')
+      .getRawMany()
     return bikes
   }
 
   async findByBrandId(brandId: string) {
     return await this.bikeRepository.find({ where: { brandId } })
+  }
+
+  async findBikeNotInBikesService(serviceId: string) {
+    return await this.bikeRepository.find({
+      where: {
+        bikeServices: {
+          serviceId: Not(serviceId),
+        },
+      },
+    })
+  }
+
+  async findBikeInBikesService(bikeServiceId: string, serviceId: string) {
+    const bikeServiceQuery: FindOptionsWhere<BikesService> = {}
+    if (bikeServiceId) {
+      bikeServiceQuery.id = Not(bikeServiceId)
+    }
+    bikeServiceQuery.serviceId = serviceId
+    return await this.bikeRepository.find({
+      where: {
+        bikeServices: {
+          ...bikeServiceQuery,
+        },
+      },
+    })
   }
 
   async findByBikeTypeId(bikeTypeId: string) {

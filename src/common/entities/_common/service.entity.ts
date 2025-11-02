@@ -5,12 +5,14 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import CoreEntity from '../core-entity'
 import { Booking } from '../_booking/booking.entity'
 import { ServiceCategory } from './service-category.entity'
-import { BikeService } from './bike-service.entity'
+import { BikesService } from './bike-service.entity'
+import { Upload } from '../_upload/upload.entity'
 
 @Entity({
   // schema: '_common',
@@ -29,6 +31,28 @@ export class Service extends CoreEntity {
   @Column({ name: 'description', type: 'varchar', default: '' })
   description: string
 
+  @Column({
+    name: 'upload_image_id',
+    type: 'varchar',
+    nullable: true,
+  })
+  uploadImageId: string
+
+  @OneToOne(() => Upload, (upload) => upload.product)
+  @JoinColumn([{ name: 'upload_image_id', referencedColumnName: 'id' }])
+  uploadImage: Upload
+
+  @OneToOne(() => Upload, (upload) => upload.product)
+  @JoinColumn([{ name: 'upload_video_id', referencedColumnName: 'id' }])
+  uploadVideo: Upload
+
+  @Column({
+    name: 'upload_video_id',
+    type: 'varchar',
+    nullable: true,
+  })
+  uploadVideoId: string
+
   @Column({ name: 'service_category_id', type: 'varchar', nullable: true })
   serviceCategoryId: string
 
@@ -37,11 +61,11 @@ export class Service extends CoreEntity {
     (serviceCategory) => serviceCategory.service,
   )
   @JoinColumn({ name: 'service_category_id', referencedColumnName: 'id' })
-  serviceCategory: ServiceCategory[]
+  serviceCategory: ServiceCategory
 
   @OneToMany(() => Booking, (booking) => booking.service)
   booking: Booking[]
 
-  @OneToMany(() => BikeService, (type) => type.service)
-  bikeServices: BikeService[]
+  @OneToMany(() => BikesService, (type) => type.service)
+  bikeServices: BikesService[]
 }

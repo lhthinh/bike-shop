@@ -13,7 +13,7 @@ import { Capacity } from './capacity.entity'
 import { BikeBikeGeneration } from './bike-bike-generation.entity'
 import { BikeType } from './bike-type.entity'
 import { BikeCapacity } from './bike-capacity.entity'
-import { BikeService } from './bike-service.entity'
+import { BikesService } from './bike-service.entity'
 
 @Entity({
   // schema: '_common',
@@ -49,10 +49,6 @@ export class Bike extends CoreEntity {
   @OneToMany(() => BikeCapacity, (type) => type.bike)
   bikeCapacity: BikeCapacity[]
 
-  @Column({ name: 'bike_service_id', type: 'varchar', nullable: true })
-  bikeServiceId: string
-
-  @ManyToOne(() => BikeService, (type) => type.bikes)
-  @JoinColumn({ name: 'bike_service_id', referencedColumnName: 'id' })
-  bikeService: BikeService
+  @OneToMany(() => BikesService, (type) => type.bike)
+  bikeServices: BikesService[]
 }

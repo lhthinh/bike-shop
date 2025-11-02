@@ -29,9 +29,6 @@ export class ProductService {
     const { productCategoryId, description, name, price } = createProductDto
     const uploadFilePath = uploadFile.path
     let uploadFileId = null
-    if (uploadFilePath) {
-      uploadFileId = (await this.uploadService.upload(uploadFilePath)).id
-    }
     if (productCategoryId) {
       const productCate =
         await this.productCategoryService.getOneById(productCategoryId)
@@ -40,12 +37,20 @@ export class ProductService {
         throw new BadRequestException('Không tồn tại danh mục này')
       }
     }
-    return await this.productRepository.save({
+    const newProduct = await this.productRepository.save({
       description,
       name,
-      uploadId: uploadFileId,
       price,
       productCategoryId: productCategoryId || null,
+    })
+    if (uploadFilePath) {
+      uploadFileId = (
+        await this.uploadService.uploadProduct(uploadFilePath, newProduct.id)
+      ).id
+    }
+    return await this.productRepository.save({
+      uploadId: uploadFileId,
+      ...newProduct,
     })
   }
 
@@ -132,8 +137,11 @@ export class ProductService {
     } else {
       if (uploadFile) {
         const uploadFilePath = uploadFile.path
-        const { id } = await this.uploadService.upload(uploadFilePath)
-        uploadFileId = id
+        const { id: idUpload } = await this.uploadService.uploadProduct(
+          uploadFilePath,
+          id,
+        )
+        uploadFileId = idUpload
       } else {
         uploadFileId = null
       }

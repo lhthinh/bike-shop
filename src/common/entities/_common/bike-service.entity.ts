@@ -15,7 +15,7 @@ import { Service } from './service.entity'
   // schema: '_common',
   name: 'bike_service',
 })
-export class BikeService extends CoreEntity {
+export class BikesService extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
@@ -34,8 +34,15 @@ export class BikeService extends CoreEntity {
   @Column({ name: 'to_time', type: 'double precision' })
   toTime: number
 
-  @OneToMany(() => Bike, (bike) => bike.bikeService)
-  bikes: Bike[]
+  @Column({ name: 'type', type: 'varchar' })
+  type: string
+
+  @Column({ name: 'bike_id', type: 'varchar' })
+  bikeId: string
+
+  @ManyToOne(() => Bike, (type) => type.bikeServices)
+  @JoinColumn({ name: 'bike_id', referencedColumnName: 'id' })
+  bike: Bike
 
   @Column({ name: 'service_id', type: 'varchar' })
   serviceId: string

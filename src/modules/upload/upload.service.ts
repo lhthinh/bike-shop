@@ -16,6 +16,39 @@ export class UploadService {
     return await this.uploadRepository.save({ path, isActive })
   }
 
+  async uploadProduct(
+    path: string,
+    productId: string,
+    isActive: boolean = true,
+  ) {
+    return await this.uploadRepository.save({ path, isActive, productId })
+  }
+
+  async uploadServiceImage(
+    path: string,
+    serviceId: string,
+    isActive: boolean = true,
+  ) {
+    return await this.uploadRepository.save({
+      path,
+      isActive,
+      uploadServiceImageId: serviceId,
+    })
+  }
+
+  async uploadServiceVideo(
+    path: string,
+    serviceId: string,
+    isActive: boolean = true,
+  ) {
+    return await this.uploadRepository.save({
+      path,
+      isActive,
+      uploadServiceVideoId: serviceId,
+    })
+  }
+
+
   async remove(path: string) {
     const file = await this.uploadRepository.findOneBy({ path })
     if (file) {
