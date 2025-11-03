@@ -8,6 +8,7 @@ import { UpdateBikeGenerationDto } from '../dto/bike-generation/update-bike-gene
 import { BikeBikeGeneration } from 'src/common/entities/_common/bike-bike-generation.entity'
 import _ from 'lodash'
 import { BikeCapacity } from 'src/common/entities/_common/bike-capacity.entity'
+import { Transactional } from 'typeorm-transactional'
 
 @Injectable()
 export class BikeCapacityService {
@@ -22,5 +23,21 @@ export class BikeCapacityService {
       capacityId: item,
     }))
     return await this.bikeCapacityRepository.save(list)
+  }
+
+  @Transactional()
+  async updateByBikeId(bikeId: string, capacityIds: string[]) {
+    await this.bikeCapacityRepository.delete({
+      bikeId,
+    })
+    const list = _.map(capacityIds, (item) => ({
+      bikeId,
+      capacityId: item,
+    }))
+    return await this.bikeCapacityRepository.save(list)
+  }
+
+  async deleteBikeCapacity(bikeId: string) {
+    await this.bikeCapacityRepository.delete({ bikeId })
   }
 }

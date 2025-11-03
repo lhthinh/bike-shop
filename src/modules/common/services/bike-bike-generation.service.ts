@@ -22,4 +22,19 @@ export class BikeBikeGenerationService {
     }))
     return await this.bikeBikeGenerationRepository.save(list)
   }
+
+  async updateByBikeId(bikeId: string, generationIds: string[]) {
+    await this.bikeBikeGenerationRepository.delete({
+      bikeId,
+    })
+    const list = _.map(generationIds, (item) => ({
+      bikeId,
+      bikeGenerationId: item,
+    }))
+    return await this.bikeBikeGenerationRepository.save(list)
+  }
+
+  async deleteBikeBikeGeneration(bikeId: string) {
+    await this.bikeBikeGenerationRepository.delete({ bikeId })
+  }
 }

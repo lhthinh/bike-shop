@@ -1,4 +1,4 @@
-import { Inject, Injectable, Search } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, Search } from '@nestjs/common'
 import { GetBrandDto } from '../dto/brand/get-brand.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Brand } from 'src/common/entities/_common/brand.entity'
@@ -41,7 +41,9 @@ export class BrandService {
 
   async deleteBrand(id: string) {
     const bikes = await this.bikeService.findByBrandId(id)
-    await this.bikeService.removes(bikes)
+    if (bikes.length > 0) {
+      throw new BadRequestException('Vui lòng xóa xe đang thuộc hãng')
+    }
     return await this.brandRepository.delete({
       id,
     })

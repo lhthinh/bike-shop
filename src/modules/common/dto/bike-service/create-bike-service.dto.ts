@@ -12,7 +12,7 @@ import { Trim } from 'src/common/libs/class-tranformer/decorator'
 import { EUnit } from '../../common.enum'
 
 export class CreateBikeServiceDto {
-  @ApiProperty({ example: '', required: false })
+  @ApiProperty({ example: [], required: false })
   @IsArray()
   @IsUUID()
   bikeIds: string[]
@@ -22,12 +22,12 @@ export class CreateBikeServiceDto {
   @Trim()
   serviceId: string
 
-    @ApiProperty({ example: '', required: false })
+  @ApiProperty({ example: '', required: false })
   @IsNumber()
   @Type(() => Number)
   fromTime: number
 
-    @ApiProperty({ example: '', required: false })
+  @ApiProperty({ example: '', required: false })
   @IsNumber()
   @Type(() => Number)
   toTime: number

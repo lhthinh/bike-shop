@@ -100,14 +100,16 @@ export class BikeService {
   async findBikeNotInBikesService(serviceId: string) {
     return await this.bikeRepository.find({
       where: {
-        bikeServices: {
-          serviceId: Not(serviceId),
+        bikeBikeServices: {
+          bikeService: {
+            serviceId: Not(serviceId),
+          },
         },
       },
     })
   }
 
-  async findBikeInBikesService(bikeServiceId: string, serviceId: string) {
+  async findBikeInBikesService(serviceId: string, bikeServiceId: string) {
     const bikeServiceQuery: FindOptionsWhere<BikesService> = {}
     if (bikeServiceId) {
       bikeServiceQuery.id = Not(bikeServiceId)
@@ -115,8 +117,8 @@ export class BikeService {
     bikeServiceQuery.serviceId = serviceId
     return await this.bikeRepository.find({
       where: {
-        bikeServices: {
-          ...bikeServiceQuery,
+        bikeBikeServices: {
+          bikeService: bikeServiceQuery,
         },
       },
     })
@@ -162,17 +164,26 @@ export class BikeService {
   async update(id: string, updateBikeDto: UpdateBikeDto) {
     const { brandId, name, bikeGenerationIds, bikeTypeId, capacityIds } =
       updateBikeDto
-    if (!(brandId && name && bikeGenerationIds && bikeTypeId && capacityIds)) {
+    if (
+      !(
+        brandId &&
+        name &&
+        bikeGenerationIds.length > 0 &&
+        bikeTypeId &&
+        capacityIds.length > 0
+      )
+    ) {
       throw new BadRequestException('Vui lòng điền đầy đủ thông tin')
     }
-    return await this.bikeRepository.save({ id, ...updateBikeDto })
+    await this.bikeBikeGenerationService.updateByBikeId(id, bikeGenerationIds)
+    await this.bikeCapacityService.updateByBikeId(id, capacityIds)
+    return await this.bikeRepository.save({ id, brandId, name, bikeTypeId })
   }
 
+  @Transactional()
   async delete(id: string) {
+    await this.bikeCapacityService.deleteBikeCapacity(id)
+    await this.bikeBikeGenerationService.deleteBikeBikeGeneration(id)
     return await this.bikeRepository.delete({ id })
-  }
-
-  async removes(bikes: Bike[]) {
-    await this.bikeRepository.remove(bikes)
   }
 }

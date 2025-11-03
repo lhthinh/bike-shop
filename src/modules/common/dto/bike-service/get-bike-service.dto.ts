@@ -4,7 +4,7 @@ import { IsOptional, IsString } from 'class-validator'
 import { PaginationDTO } from 'src/common/dtos/pagination.dto'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
-export class GetBikeTypeDto {
+export class GetBikeServiceDto {
   @ApiProperty({ example: '', required: false })
   @IsOptional()
   @IsString()

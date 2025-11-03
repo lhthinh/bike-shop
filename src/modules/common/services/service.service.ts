@@ -8,6 +8,7 @@ import { Booking } from 'src/common/entities/_booking/booking.entity'
 import { CreateServiceDto } from '../dto/service/create-service.dto'
 import { UploadService } from 'src/modules/upload/upload.service'
 import { Transactional } from 'typeorm-transactional'
+import { Upload } from 'src/common/entities/_upload/upload.entity'
 
 @Injectable()
 export class ServiceService {
@@ -104,10 +105,23 @@ export class ServiceService {
   async findHot() {
     const posts = await this.serviceRepository
       .createQueryBuilder('s')
-      .select('s.id, s.name, s.description, s.price, s.')
-      .leftJoin(Booking, 'b', 'b.serviceId = s.id')
-      .addSelect('COUNT(b.id)', 'bookingCount')
-      .groupBy('s.id')
+      .select([
+        's.id as "id"',
+        's.name as "name"',
+        's.description as "description"',
+        's.price as "price"',
+        'ui.path AS "uploadImage"',
+        'uv.path AS "uploadVideo"',
+      ])
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('COUNT(*)::int')
+          .from('booking', 'b')
+          .where('b.service_id = s.id')
+      }, 'bookingCount')
+      .leftJoin(Upload, 'ui', 'ui.id = s.uploadImageId')
+      .leftJoin(Upload, 'uv', 'uv.id = s.uploadVideoId')
+      .orderBy('"bookingCount"', 'DESC')
       .limit(18)
       .getRawMany()
 

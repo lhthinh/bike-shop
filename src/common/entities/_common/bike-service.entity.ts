@@ -4,11 +4,10 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm'
 import CoreEntity from '../core-entity'
-import { BikeBikeGeneration } from './bike-bike-generation.entity'
-import { Bike } from './bike.entity'
+import { BikeBikeService } from './bike-bike-service.entity'
 import { Service } from './service.entity'
 
 @Entity({
@@ -19,32 +18,25 @@ export class BikesService extends CoreEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ name: 'name', type: 'varchar' })
-  name: string
-
-  @Column({ name: 'from_price', type: 'double precision' })
+  @Column({ name: 'from_price', type: 'double precision', nullable: true })
   fromPrice: number
 
-  @Column({ name: 'to_price', type: 'double precision' })
+  @Column({ name: 'to_price', type: 'double precision', nullable: true })
   toPrice: number
 
-  @Column({ name: 'from_time', type: 'double precision' })
+  @Column({ name: 'from_time', type: 'double precision', nullable: true })
   fromTime: number
 
-  @Column({ name: 'to_time', type: 'double precision' })
+  @Column({ name: 'to_time', type: 'double precision', nullable: true })
   toTime: number
 
-  @Column({ name: 'type', type: 'varchar' })
-  type: string
+  @Column({ name: 'unit', type: 'integer', nullable: true })
+  unit: number
 
-  @Column({ name: 'bike_id', type: 'varchar' })
-  bikeId: string
+  @OneToMany(() => BikeBikeService, (type) => type.bikeService)
+  bikeBikeService: BikeBikeService[]
 
-  @ManyToOne(() => Bike, (type) => type.bikeServices)
-  @JoinColumn({ name: 'bike_id', referencedColumnName: 'id' })
-  bike: Bike
-
-  @Column({ name: 'service_id', type: 'varchar' })
+  @Column({ name: 'service_id', type: 'varchar', nullable: true })
   serviceId: string
 
   @ManyToOne(() => Service, (type) => type.bikeServices)

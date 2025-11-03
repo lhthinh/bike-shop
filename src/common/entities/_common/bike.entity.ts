@@ -14,6 +14,7 @@ import { BikeBikeGeneration } from './bike-bike-generation.entity'
 import { BikeType } from './bike-type.entity'
 import { BikeCapacity } from './bike-capacity.entity'
 import { BikesService } from './bike-service.entity'
+import { BikeBikeService } from './bike-bike-service.entity'
 
 @Entity({
   // schema: '_common',
@@ -49,6 +50,6 @@ export class Bike extends CoreEntity {
   @OneToMany(() => BikeCapacity, (type) => type.bike)
   bikeCapacity: BikeCapacity[]
 
-  @OneToMany(() => BikesService, (type) => type.bike)
-  bikeServices: BikesService[]
+  @OneToMany(() => BikeBikeService, (type) => type.bike)
+  bikeBikeServices: BikeBikeService[]
 }

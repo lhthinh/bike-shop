@@ -38,6 +38,7 @@ import { BikeCapacityService } from './services/bike-capacity.service'
 import { BikesService } from 'src/common/entities/_common/bike-service.entity'
 import { BikeServiceController } from './controllers/bikes-service.controller'
 import { BikeServiceService } from './services/bike-service.service'
+import { BikeBikeService } from 'src/common/entities/_common/bike-bike-service.entity'
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { BikeServiceService } from './services/bike-service.service'
       BikeBikeGeneration,
       BikeCapacity,
       BikesService,
+      BikeBikeService,
     ]),
     UploadModule,
   ],
