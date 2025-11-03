@@ -34,34 +34,34 @@ export class UploadService {
     })
   }
 
-  async remove(path: string) {
-    const file = await this.uploadRepository.findOneBy({ path })
+  async removeUploadProduct(productId: string) {
+    const file = await this.uploadRepository.findOneBy({ productId })
     if (file) {
       await this.uploadRepository.remove(file)
-      unlink(path, (error) => {
+      unlink(file.path, (error) => {
         console.log(error)
       })
     }
   }
 
-  async removeUploadImageService(path: string, serviceId?: string) {
+  async removeUploadImageService(serviceId?: string) {
     const file = await this.uploadRepository.findOneBy({
       uploadServiceImageId: serviceId,
     })
     if (file) {
       await this.uploadRepository.remove(file)
 
-      unlink(path, (error) => {})
+      unlink(file.path, (error) => {})
     }
   }
 
-  async removeUploadVideoService(path: string, serviceId?: string) {
+  async removeUploadVideoService(serviceId?: string) {
     const file = await this.uploadRepository.findOneBy({
       uploadServiceVideoId: serviceId,
     })
     if (file) {
       await this.uploadRepository.remove(file)
-      unlink(path, (error) => {})
+      unlink(file.path, (error) => {})
     }
   }
 

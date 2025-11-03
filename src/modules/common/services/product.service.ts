@@ -129,23 +129,25 @@ export class ProductService {
       name,
       price,
       productCategoryId,
-      uploadFile: uploadFileFromDto,
+      uploadFile: uplodaFileDto,
     } = updateProduct
-    let uploadFileId = ''
-    if (uploadFileFromDto) {
-      uploadFileId = uploadFileFromDto
-    } else {
-      if (uploadFile) {
-        const uploadFilePath = uploadFile.path
-        const { id: idUpload } = await this.uploadService.uploadProduct(
-          uploadFilePath,
-          id,
-        )
-        uploadFileId = idUpload
-      } else {
-        uploadFileId = null
-      }
+    let uploadFileId = null
+    await this.productRepository.save({
+      id,
+      uploadId: null,
+    })
+    if (uplodaFileDto) {
+      uploadFileId = uplodaFileDto
+    } else if (uploadFile) {
+      await this.uploadService.removeUploadProduct(id)
+      const uploadFilePath = uploadFile.path
+      const { id: idUpload } = await this.uploadService.uploadProduct(
+        uploadFilePath,
+        id,
+      )
+      uploadFileId = idUpload
     }
+
     return await this.productRepository.save({
       id,
       description,
