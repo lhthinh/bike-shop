@@ -44,7 +44,4 @@ export class Upload extends CoreEntity {
   @OneToOne(() => Service, (type) => type.uploadVideo)
   @JoinColumn([{ name: 'service_image_id', referencedColumnName: 'id' }])
   uploadServiceVideo: Service
-
-  @Column({ name: 'is_active', type: 'boolean' })
-  isActive: boolean
 }
