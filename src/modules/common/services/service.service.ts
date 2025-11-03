@@ -124,6 +124,12 @@ export class ServiceService {
         uploadVideo: true,
       },
     })
+
+    await this.serviceRepository.save({
+      id,
+      uploadImageId: null,
+      uploadVideoId: null,
+    })
     let uploadImageId = null
     let uploadVideoId = null
 
@@ -135,6 +141,8 @@ export class ServiceService {
       uploadImageId = (
         await this.uploadService.uploadServiceImage(uploadImagePath, id)
       ).id
+    } else if (uploadImageDto) {
+      uploadImageId = service?.uploadImageId
     }
     if (uploadVideo) {
       await this.uploadService.removeUploadVideoService(id)
@@ -144,6 +152,8 @@ export class ServiceService {
           service.uploadVideoId,
         )
       ).id
+    } else if (uploadVideoDto) {
+      uploadVideoId = service?.uploadVideoId
     }
     return await this.serviceRepository.save({
       id,

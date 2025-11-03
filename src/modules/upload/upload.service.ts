@@ -49,10 +49,8 @@ export class UploadService {
       uploadServiceImageId: serviceId,
     })
     if (file) {
-      await this.uploadRepository.save({
-        ...file,
-        uploadServiceImageId: null,
-      })
+      await this.uploadRepository.remove(file)
+
       unlink(path, (error) => {})
     }
   }
@@ -62,10 +60,7 @@ export class UploadService {
       uploadServiceVideoId: serviceId,
     })
     if (file) {
-      await this.uploadRepository.save({
-        ...file,
-        uploadServiceVideoId: null,
-      })
+      await this.uploadRepository.remove(file)
       unlink(path, (error) => {})
     }
   }
