@@ -71,18 +71,30 @@ export class ServiceController {
   ) {
     const image = files.uploadImage?.[0]
     const video = files.uploadVideo?.[0]
-    return await this.serviceService.create(
-      createServiceDto,
-      image,
-      video,
-    )
+    return await this.serviceService.create(createServiceDto, image, video)
   }
 
   @Put(':id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'uploadImage', maxCount: 1 },
+        { name: 'uploadVideo', maxCount: 1 },
+      ],
+      uploadImageAndVideo,
+    ),
+  )
   async updateService(
     @Param('id') id: string,
     @Body() updateServiceDto: UpdateServiceDto,
+    @UploadedFiles()
+    files: {
+      uploadImage?: Express.Multer.File[]
+      uploadVideo?: Express.Multer.File[]
+    },
   ) {
-    return await this.serviceService.update(id, updateServiceDto)
+    const image = files.uploadImage?.[0]
+    const video = files.uploadVideo?.[0]
+    return await this.serviceService.update(id, updateServiceDto, image, video)
   }
 }

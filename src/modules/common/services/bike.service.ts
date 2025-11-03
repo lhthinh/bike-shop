@@ -18,6 +18,7 @@ import { BikeBikeGenerationService } from './bike-bike-generation.service'
 import { BikeCapacityService } from './bike-capacity.service'
 import _ from 'lodash'
 import { BikesService } from 'src/common/entities/_common/bike-service.entity'
+import { GetBikeNotInServiceDto } from '../dto/bike/get-bike-not-in-service.dto'
 
 @Injectable()
 export class BikeService {
@@ -97,15 +98,29 @@ export class BikeService {
     return await this.bikeRepository.find({ where: { brandId } })
   }
 
-  async findBikeNotInBikesService(serviceId: string) {
+  async findBikeNotInBikesService(
+    getBikeNotInServiceDto: GetBikeNotInServiceDto,
+  ) {
+    const { bikeServiceId, search, serviceId } = getBikeNotInServiceDto || {}
     return await this.bikeRepository.find({
-      where: {
-        bikeBikeServices: {
-          bikeService: {
-            serviceId: Not(serviceId),
+      where: [
+        {
+          name: ILike(`%${search || ''}%`),
+          bikeBikeServices: {
+            bikeService: {
+              serviceId: Not(serviceId),
+            },
           },
         },
-      },
+        {
+          name: ILike(`%${search || ''}%`),
+          bikeBikeServices: {
+            bikeService: {
+              id: bikeServiceId,
+            },
+          },
+        },
+      ],
     })
   }
 

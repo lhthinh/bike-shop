@@ -14,6 +14,7 @@ import { ApiExcludeEndpoint, ApiHideProperty, ApiTags } from '@nestjs/swagger'
 import { CreateBikeDto } from '../dto/bike/create-bike.dto'
 import { UpdateBikeDto } from '../dto/bike/update-bike.dto'
 import { Public } from 'src/common/decorators/public.decorator'
+import { GetBikeNotInServiceDto } from '../dto/bike/get-bike-not-in-service.dto'
 
 @ApiTags('Common/Bike')
 @Controller('common/bike')
@@ -29,6 +30,15 @@ export class BikeController {
   @Post()
   async create(@Body() createBikeDto: CreateBikeDto) {
     return await this.bikeService.create(createBikeDto)
+  }
+
+  @Get('not-in-service')
+  async findBikeNotInService(
+    @Body() getBikeNotInServiceDto: GetBikeNotInServiceDto,
+  ) {
+    return await this.bikeService.findBikeNotInBikesService(
+      getBikeNotInServiceDto,
+    )
   }
 
   @Put(':id')

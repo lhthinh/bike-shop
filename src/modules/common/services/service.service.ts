@@ -9,6 +9,7 @@ import { CreateServiceDto } from '../dto/service/create-service.dto'
 import { UploadService } from 'src/modules/upload/upload.service'
 import { Transactional } from 'typeorm-transactional'
 import { Upload } from 'src/common/entities/_upload/upload.entity'
+import { UpdateServiceDto } from '../dto/service/update-service.dto'
 
 @Injectable()
 export class ServiceService {
@@ -84,15 +85,20 @@ export class ServiceService {
     })
   }
 
-  async update(id: string, createServiceDto: CreateServiceDto) {
+  async update(
+    id: string,
+    updateServiceDto: UpdateServiceDto,
+    uploadImage: Express.Multer.File,
+    uploadVideo: Express.Multer.File,
+  ) {
     const {
       description,
       name,
       price,
       serviceCategoryId,
-      uploadImage,
-      uploadVideo,
-    } = createServiceDto
+      uploadImage: uploadImageDto,
+      uploadVideo: uploadVideoDto,
+    } = updateServiceDto
     return await this.serviceRepository.save({
       id,
       description,

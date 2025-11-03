@@ -182,5 +182,13 @@ export class BikeServiceService {
      */
     const { bikeIds, fromPrice, fromTime, serviceId, toPrice, toTime, unit } =
       updateBikeServiceDto
+    const bikeService = await this.bikesServiceRepository.findOne({
+      where: { id },
+      relations: {
+        bikeBikeService: {
+          bike: true,
+        },
+      },
+    })
   }
 }
