@@ -37,7 +37,16 @@ export class ServiceService {
   }
 
   async findOne(id: string) {
-    return await this.serviceRepository.findOneBy({ id })
+    return await this.serviceRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        uploadImage: true,
+        uploadVideo: true,
+        serviceCategory: true,
+      },
+    })
   }
 
   async findByServiceCategoryId(serviceCategoryId: string) {
@@ -118,20 +127,23 @@ export class ServiceService {
     let uploadImageId = null
     let uploadVideoId = null
 
-    const uploadImagePath = uploadImage.path
-    const uploadVideoPath = uploadVideo.path
+    const uploadImagePath = uploadImage?.path
+    const uploadVideoPath = uploadVideo?.path
 
     if (uploadImage) {
+      await this.uploadService.removeUploadImageService(id)
       uploadImageId = (
         await this.uploadService.uploadServiceImage(uploadImagePath, id)
       ).id
-      await this.uploadService.remove(service.uploadImage.path)
     }
     if (uploadVideo) {
+      await this.uploadService.removeUploadVideoService(id)
       uploadVideoId = (
-        await this.uploadService.uploadServiceImage(uploadVideoPath, id)
+        await this.uploadService.uploadServiceImage(
+          uploadVideoPath,
+          service.uploadVideoId,
+        )
       ).id
-      await this.uploadService.remove(service.uploadVideo.path)
     }
     return await this.serviceRepository.save({
       id,

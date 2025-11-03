@@ -12,49 +12,61 @@ export class UploadService {
     private readonly uploadRepository: Repository<Upload>,
   ) {}
 
-  async upload(path: string, isActive: boolean = true) {
-    return await this.uploadRepository.save({ path, isActive })
+  async upload(path: string) {
+    return await this.uploadRepository.save({ path })
   }
 
-  async uploadProduct(
-    path: string,
-    productId: string,
-    isActive: boolean = true,
-  ) {
-    return await this.uploadRepository.save({ path, isActive, productId })
+  async uploadProduct(path: string, productId: string) {
+    return await this.uploadRepository.save({ path, productId })
   }
 
-  async uploadServiceImage(
-    path: string,
-    serviceId: string,
-    isActive: boolean = true,
-  ) {
+  async uploadServiceImage(path: string, serviceId: string) {
     return await this.uploadRepository.save({
       path,
-      isActive,
       uploadServiceImageId: serviceId,
     })
   }
 
-  async uploadServiceVideo(
-    path: string,
-    serviceId: string,
-    isActive: boolean = true,
-  ) {
+  async uploadServiceVideo(path: string, serviceId: string) {
     return await this.uploadRepository.save({
       path,
-      isActive,
       uploadServiceVideoId: serviceId,
     })
   }
 
-
   async remove(path: string) {
     const file = await this.uploadRepository.findOneBy({ path })
     if (file) {
+      await this.uploadRepository.remove(file)
       unlink(path, (error) => {
-        this.uploadRepository.save({ ...file, isActive: false })
+        console.log(error)
       })
+    }
+  }
+
+  async removeUploadImageService(path: string, serviceId?: string) {
+    const file = await this.uploadRepository.findOneBy({
+      uploadServiceImageId: serviceId,
+    })
+    if (file) {
+      await this.uploadRepository.save({
+        ...file,
+        uploadServiceImageId: null,
+      })
+      unlink(path, (error) => {})
+    }
+  }
+
+  async removeUploadVideoService(path: string, serviceId?: string) {
+    const file = await this.uploadRepository.findOneBy({
+      uploadServiceVideoId: serviceId,
+    })
+    if (file) {
+      await this.uploadRepository.save({
+        ...file,
+        uploadServiceVideoId: null,
+      })
+      unlink(path, (error) => {})
     }
   }
 

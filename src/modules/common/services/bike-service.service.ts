@@ -182,7 +182,7 @@ export class BikeServiceService {
      */
     const { bikeIds, fromPrice, fromTime, serviceId, toPrice, toTime, unit } =
       updateBikeServiceDto
-    const bikeService = await this.bikesServiceRepository.findOne({
+    const currentBikeService = await this.bikesServiceRepository.findOne({
       where: { id },
       relations: {
         bikeBikeService: {
@@ -190,5 +190,13 @@ export class BikeServiceService {
         },
       },
     })
+
+    if (!currentBikeService) {
+      throw new BadRequestException(`Không tìm thấy dữ liệu dịch vụ xe.`)
+    }
+
+    const oldBikeIds = currentBikeService.bikeBikeService.map((b) => b.bikeId)
+
+    const removedBikeIds = _.difference(oldBikeIds, bikeIds)
   }
 }

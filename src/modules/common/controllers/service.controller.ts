@@ -86,6 +86,7 @@ export class ServiceController {
     return await this.serviceService.reverse(id)
   }
 
+  @ApiConsumes('multipart/form-data')
   @Put(':id')
   @UseInterceptors(
     FileFieldsInterceptor(

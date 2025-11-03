@@ -34,7 +34,7 @@ export class BikeController {
 
   @Get('not-in-service')
   async findBikeNotInService(
-    @Body() getBikeNotInServiceDto: GetBikeNotInServiceDto,
+    @Query() getBikeNotInServiceDto: GetBikeNotInServiceDto,
   ) {
     return await this.bikeService.findBikeNotInBikesService(
       getBikeNotInServiceDto,
