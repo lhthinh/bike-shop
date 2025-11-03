@@ -1,4 +1,10 @@
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 export default abstract class CoreEntity extends BaseEntity {
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz', nullable: true })

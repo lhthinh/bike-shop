@@ -81,6 +81,11 @@ export class ServiceController {
     return await this.serviceService.create(createServiceDto, image, video)
   }
 
+  @Put('reverse/:id')
+  async reverse(@Param('id') id: string) {
+    return await this.serviceService.reverse(id)
+  }
+
   @Put(':id')
   @UseInterceptors(
     FileFieldsInterceptor(

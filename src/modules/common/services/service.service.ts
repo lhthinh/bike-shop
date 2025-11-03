@@ -27,6 +27,10 @@ export class ServiceService {
       where: {
         name: ILike(`%${search || ''}%`),
       },
+      relations: {
+        uploadImage: true,
+        uploadVideo: true,
+      },
     })
   }
 
@@ -176,6 +180,13 @@ export class ServiceService {
         deletedAt: Not(IsNull()),
       },
       withDeleted: true,
+    })
+  }
+
+  async reverse(id: string) {
+    return await this.serviceRepository.save({
+      id,
+      deletedAt: null,
     })
   }
 }
