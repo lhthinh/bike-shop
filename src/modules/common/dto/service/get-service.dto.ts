@@ -9,4 +9,10 @@ export class GetServiceDto {
   @IsString()
   @Trim()
   search: string
+
+  @ApiProperty({ example: false, required: false })
+  @IsOptional()
+  @IsString()
+  @Trim()
+  isDeleted: boolean
 }

@@ -27,7 +27,6 @@ export class ProductService {
     uploadFile: Express.Multer.File,
   ) {
     const { productCategoryId, description, name, price } = createProductDto
-    const uploadFilePath = uploadFile.path
     let uploadFileId = null
     if (productCategoryId) {
       const productCate =
@@ -43,14 +42,16 @@ export class ProductService {
       price,
       productCategoryId: productCategoryId || null,
     })
-    if (uploadFilePath) {
+    console.log(uploadFile, 'uploadFile')
+    if (uploadFile) {
+      const uploadFilePath = uploadFile?.path
       uploadFileId = (
         await this.uploadService.uploadProduct(uploadFilePath, newProduct.id)
       ).id
     }
     return await this.productRepository.save({
-      uploadId: uploadFileId,
       ...newProduct,
+      uploadId: uploadFileId,
     })
   }
 

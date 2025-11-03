@@ -23,16 +23,18 @@ export class ServiceService {
   ) {}
 
   async find(getServiceDto: GetServiceDto) {
-    const { search } = getServiceDto || {}
+    const { search, isDeleted } = getServiceDto || {}
     return await this.serviceRepository.find({
       where: {
         name: ILike(`%${search || ''}%`),
+        deletedAt: isDeleted ? Not(IsNull()) : IsNull(),
       },
       relations: {
         uploadImage: true,
         uploadVideo: true,
         serviceCategory: true,
       },
+      withDeleted: true,
     })
   }
 
@@ -211,17 +213,6 @@ export class ServiceService {
 
   async delete(id: string) {
     await this.serviceRepository.softDelete({ id })
-  }
-
-  async getListDelete(getServiceDto: GetServiceDto) {
-    const { search } = getServiceDto || {}
-    return await this.serviceRepository.find({
-      where: {
-        name: ILike(`%${search || ''}%`),
-        deletedAt: Not(IsNull()),
-      },
-      withDeleted: true,
-    })
   }
 
   async reverse(id: string) {

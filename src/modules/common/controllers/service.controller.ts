@@ -47,11 +47,6 @@ export class ServiceController {
     return await this.serviceService.findHot()
   }
 
-  @Get('list-delete')
-  async deleteProduct(@Query() getServiceDto: GetServiceDto) {
-    return await this.serviceService.getListDelete(getServiceDto)
-  }
-
   @Get(':id')
   async getOneById(@Param('id') id: string) {
     return await this.serviceService.findOne(id)
