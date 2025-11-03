@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -29,6 +30,7 @@ import {
   uploadImageAndVideo,
   uploadProductImage,
 } from 'src/common/configs/multer.config'
+import { GetServiceDto } from '../dto/service/get-service.dto'
 
 @ApiTags('Common/Service')
 @Controller('common/service')
@@ -36,13 +38,18 @@ export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Get()
-  async getBike(@Query() getBikeDto: GetBikeDto) {
-    return await this.serviceService.find(getBikeDto)
+  async getBike(@Query() getServiceDto: GetServiceDto) {
+    return await this.serviceService.find(getServiceDto)
   }
 
   @Get('hot-service')
   async getHotService() {
     return await this.serviceService.findHot()
+  }
+
+  @Get('list-delete')
+  async deleteProduct(@Query() getServiceDto: GetServiceDto) {
+    return await this.serviceService.getListDelete(getServiceDto)
   }
 
   @Get(':id')
@@ -96,5 +103,10 @@ export class ServiceController {
     const image = files.uploadImage?.[0]
     const video = files.uploadVideo?.[0]
     return await this.serviceService.update(id, updateServiceDto, image, video)
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return await this.serviceService.delete(id)
   }
 }

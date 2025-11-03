@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Service } from 'src/common/entities/_common/service.entity'
-import { ILike, Like, Repository } from 'typeorm'
+import { ILike, IsNull, Like, Not, Repository } from 'typeorm'
 import { GetBrandDto } from '../dto/brand/get-brand.dto'
 import { GetServiceDto } from '../dto/service/get-service.dto'
 import { Booking } from 'src/common/entities/_booking/booking.entity'
@@ -60,7 +60,6 @@ export class ServiceService {
 
     const uploadImagePath = uploadImage.path
     const uploadVideoPath = uploadVideo.path
-    console.log(uploadImage, uploadVideo)
     if (uploadImagePath) {
       uploadImageId = (
         await this.uploadService.uploadServiceImage(
@@ -85,6 +84,7 @@ export class ServiceService {
     })
   }
 
+  @Transactional()
   async update(
     id: string,
     updateServiceDto: UpdateServiceDto,
@@ -99,12 +99,42 @@ export class ServiceService {
       uploadImage: uploadImageDto,
       uploadVideo: uploadVideoDto,
     } = updateServiceDto
+
+    const service = await this.serviceRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        uploadImage: true,
+        uploadVideo: true,
+      },
+    })
+    let uploadImageId = null
+    let uploadVideoId = null
+
+    const uploadImagePath = uploadImage.path
+    const uploadVideoPath = uploadVideo.path
+
+    if (uploadImage) {
+      uploadImageId = (
+        await this.uploadService.uploadServiceImage(uploadImagePath, id)
+      ).id
+      await this.uploadService.remove(service.uploadImage.path)
+    }
+    if (uploadVideo) {
+      uploadVideoId = (
+        await this.uploadService.uploadServiceImage(uploadVideoPath, id)
+      ).id
+      await this.uploadService.remove(service.uploadVideo.path)
+    }
     return await this.serviceRepository.save({
       id,
       description,
       serviceCategoryId,
       name,
       price,
+      uploadImageId,
+      uploadVideoId,
     })
   }
 
@@ -132,5 +162,20 @@ export class ServiceService {
       .getRawMany()
 
     return posts
+  }
+
+  async delete(id: string) {
+    await this.serviceRepository.softDelete({ id })
+  }
+
+  async getListDelete(getServiceDto: GetServiceDto) {
+    const { search } = getServiceDto || {}
+    return await this.serviceRepository.find({
+      where: {
+        name: ILike(`%${search || ''}%`),
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    })
   }
 }
