@@ -24,6 +24,7 @@ export class ServiceService {
 
   async find(getServiceDto: GetServiceDto) {
     const { search, isDeleted } = getServiceDto || {}
+    console.log(isDeleted, typeof isDeleted)
     return await this.serviceRepository.find({
       where: {
         name: ILike(`%${search || ''}%`),

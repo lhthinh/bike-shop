@@ -10,6 +10,8 @@ import {
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common'
 import { GetBikeDto } from '../dto/bike/get-bike.dto'
 import { BikeService } from '../services/bike.service'
@@ -38,7 +40,9 @@ export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Get()
-  async getBike(@Query() getServiceDto: GetServiceDto) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async get(@Query() getServiceDto: GetServiceDto) {
+    console.log(getServiceDto, 'getServiceDto')
     return await this.serviceService.find(getServiceDto)
   }
 

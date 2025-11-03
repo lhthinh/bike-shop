@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional, IsString } from 'class-validator'
+import { Transform, Type } from 'class-transformer'
+import { IsBoolean, IsOptional, IsString } from 'class-validator'
 import { PaginationDTO } from 'src/common/dtos/pagination.dto'
-import { Trim } from 'src/common/libs/class-tranformer/decorator'
+import { ParseBoolean, Trim } from 'src/common/libs/class-tranformer/decorator'
 
 export class GetServiceDto {
   @ApiProperty({ example: '', required: false })
@@ -12,7 +13,7 @@ export class GetServiceDto {
 
   @ApiProperty({ example: false, required: false })
   @IsOptional()
-  @IsString()
-  @Trim()
+  @ParseBoolean()
+  @IsBoolean()
   isDeleted: boolean
 }

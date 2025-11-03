@@ -15,7 +15,10 @@ export const ToUpperCase = (options?: TransformOptions) => {
 }
 
 export const ParseBoolean = (options?: TransformOptions) => {
-  return Transform(({ value }) => _.eq(value?.toString()?.trim()?.toLowerCase(), 'true'), options)
+  return Transform(
+    ({ value }) => _.eq(value?.toString()?.trim()?.toLowerCase(), 'true'),
+    options,
+  )
 }
 
 export const ParseBooleanOrUndefined = (options?: TransformOptions) => {
@@ -64,5 +67,8 @@ export const ParseJsonArray = (options?: TransformOptions) => {
  * Only work with options toPlainOnly = true
  */
 export const OmitNilProperties = (options?: TransformOptions) => {
-  return Transform(({ value }) => _.omitBy(value, _.isNil), { ...options, toPlainOnly: true })
+  return Transform(({ value }) => _.omitBy(value, _.isNil), {
+    ...options,
+    toPlainOnly: true,
+  })
 }
