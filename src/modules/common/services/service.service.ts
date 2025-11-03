@@ -31,6 +31,7 @@ export class ServiceService {
       relations: {
         uploadImage: true,
         uploadVideo: true,
+        serviceCategory: true,
       },
     })
   }
