@@ -10,6 +10,7 @@ import { UploadService } from 'src/modules/upload/upload.service'
 import { Transactional } from 'typeorm-transactional'
 import { Upload } from 'src/common/entities/_upload/upload.entity'
 import { UpdateServiceDto } from '../dto/service/update-service.dto'
+import { ServiceCategory } from 'src/common/entities/_common/service-category.entity'
 
 @Injectable()
 export class ServiceService {
@@ -150,8 +151,24 @@ export class ServiceService {
         's.name as "name"',
         's.description as "description"',
         's.price as "price"',
-        'ui.path AS "uploadImage"',
-        'uv.path AS "uploadVideo"',
+        `
+         json_build_object(
+          'id', ui.id,
+          'path', ui.path
+        ) AS "uploadImage"
+         `,
+        `
+         json_build_object(
+          'id', uv.id,
+          'path', uv.path
+        ) AS "uploadVideo"
+         `,
+        `
+          json_build_object(
+          'id', s_c.id,
+          'name', s_c.name
+        ) AS "serviceCategory"
+         `,
       ])
       .addSelect((subQuery) => {
         return subQuery
@@ -160,6 +177,7 @@ export class ServiceService {
           .where('b.service_id = s.id')
       }, 'bookingCount')
       .leftJoin(Upload, 'ui', 'ui.id = s.uploadImageId')
+      .leftJoin(ServiceCategory, 's_c', 's_c.id = s.serviceCategoryId')
       .leftJoin(Upload, 'uv', 'uv.id = s.uploadVideoId')
       .orderBy('"bookingCount"', 'DESC')
       .limit(18)
