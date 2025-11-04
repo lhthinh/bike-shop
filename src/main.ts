@@ -12,6 +12,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { AllExceptionFilter } from './common/filters/all-exception.filter'
 import { swaggerOptions } from './common/configs/swagger-options.config'
 import path from 'path'
+import { ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
   initializeTransactionalContext({ storageDriver: StorageDriver.AUTO })
@@ -20,6 +21,8 @@ async function bootstrap() {
   })
   app.enableCors()
   app.useGlobalFilters(new AllExceptionFilter(app.get(HttpAdapterHost)))
+  app.useGlobalPipes(new ValidationPipe({ transform: true }))
+
   app.useGlobalInterceptors(new TransformInterceptor())
   app.useStaticAssets(path.resolve('files', 'product'), {
     prefix: '/files/product/',

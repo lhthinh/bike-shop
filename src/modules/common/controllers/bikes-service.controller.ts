@@ -20,9 +20,12 @@ import { UpdateBikeServiceDto } from '../dto/bike-service/update-bike-service.dt
 export class BikeServiceController {
   constructor(private readonly bikeServiceService: BikeServiceService) {}
 
-  @Get('')
-  async find(@Query() getBikeServiceDto: GetBikeServiceDto) {
-    return await this.bikeServiceService.find(getBikeServiceDto)
+  @Get(':serviceId')
+  async find(
+    @Param('serviceId') serviceId: string,
+    @Query() getBikeServiceDto: GetBikeServiceDto,
+  ) {
+    return await this.bikeServiceService.find(serviceId, getBikeServiceDto)
   }
 
   @Post()
@@ -39,5 +42,7 @@ export class BikeServiceController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {}
+  async delete(@Param('id') id: string) {
+    return await this.bikeServiceService.delete(id)
+  }
 }

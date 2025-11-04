@@ -11,4 +11,18 @@ export class GetBikeServiceDto {
   @Type(() => String)
   @Trim()
   search: string
+
+  @ApiProperty({ example: '', required: false })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  @Trim()
+  bikeId: string
+
+  @ApiProperty({ example: '', required: false })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  @Trim()
+  brandId: string
 }

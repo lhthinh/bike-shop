@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BikeGeneration } from 'src/common/entities/_common/bike-generation.entity'
-import { ILike, Repository } from 'typeorm'
+import { ILike, In, Not, Repository } from 'typeorm'
 import { CreateBikeGenerationDto } from '../dto/bike-generation/create-bike-generation.dto'
 import { GetBikeGenerationDto } from '../dto/bike-generation/get-bike-generation.dto'
 import { UpdateBikeGenerationDto } from '../dto/bike-generation/update-bike-generation.dto'
@@ -28,8 +28,8 @@ export class BikeServiceService {
     private readonly bikeService: BikeService,
   ) {}
 
-  async find(getBikeServiceDto: GetBikeServiceDto) {
-    const { search } = getBikeServiceDto || {}
+  async find(serviceId: string, getBikeServiceDto: GetBikeServiceDto) {
+    const { search, bikeId, brandId } = getBikeServiceDto || {}
     const query = this.bikesServiceRepository
       .createQueryBuilder('bs')
       .leftJoin('bs.service', 'service')
@@ -50,12 +50,20 @@ export class BikeServiceService {
     JSON_AGG(
       DISTINCT JSONB_BUILD_OBJECT(
         'id', bike.id,
-        'name', bike.name
+        'name', bike.name,
+        'brandId', bike.brand_id
       )
     ) AS "bikes"
   `,
       )
-      .where('bs.deletedAt IS NULL')
+    if (bikeId) {
+      query.andWhere('bike.id = :bikeId', { bikeId })
+    }
+    if (brandId) {
+      query.andWhere('bike.brandId = :brandId', { brandId })
+    }
+
+    query
       .groupBy(
         `
     bs.id,
@@ -85,34 +93,6 @@ export class BikeServiceService {
 
   async createBikeBikeService(data: Partial<BikeBikeService>[]) {
     await this.bikeBikeServiceRepository.save(data)
-  }
-
-  @Transactional()
-  async createBatch(createBikeServiceDtos: CreateBikeServiceDto[]) {
-    // 🟩 1️⃣ Gộp tất cả bikeIds trong toàn bộ request
-    const allBikeIds = createBikeServiceDtos.flatMap((dto) => dto.bikeIds)
-
-    // 🟩 2️⃣ Tìm các bikeIds bị trùng trong cùng request
-    const duplicateInBatch = _.chain(allBikeIds)
-      .countBy()
-      .pickBy((count) => count > 1)
-      .keys()
-      .value()
-
-    if (duplicateInBatch.length > 0) {
-      throw new BadRequestException(
-        `Xe ${duplicateInBatch.join(', ')} được chọn nhiều lần trong cùng yêu cầu`,
-      )
-    }
-
-    // 🟩 3️⃣ Nếu không trùng, tiến hành tạo từng gói (sử dụng hàm create() sẵn có)
-    const results = []
-    for await (const dto of createBikeServiceDtos) {
-      const result = await this.create(dto)
-      results.push(result)
-    }
-
-    return results
   }
 
   @Transactional()
@@ -192,11 +172,98 @@ export class BikeServiceService {
     })
 
     if (!currentBikeService) {
-      throw new BadRequestException(`Không tìm thấy dữ liệu dịch vụ xe.`)
+      throw new BadRequestException(`Không tìm thấy dữ liệu`)
     }
 
     const oldBikeIds = currentBikeService.bikeBikeService.map((b) => b.bikeId)
 
     const removedBikeIds = _.difference(oldBikeIds, bikeIds)
+
+    if (removedBikeIds.length > 0) {
+      await this.bikeBikeServiceRepository.delete({
+        bikeServiceId: id,
+        bikeId: In(removedBikeIds),
+      })
+    }
+
+    const newBikeIds = _.difference(bikeIds, oldBikeIds)
+
+    if (newBikeIds.length > 0) {
+      const findBikeInOtherServices =
+        await this.bikeService.findBikeInBikesService(serviceId, id)
+
+      const duplicateBikes = _.filter(findBikeInOtherServices, (item) =>
+        _.includes(newBikeIds, item.id),
+      )
+
+      if (duplicateBikes.length > 0) {
+        throw new BadRequestException(
+          `Xe ${_.map(duplicateBikes, (i) => i.name).join(', ')} đã tồn tại trong dịch vụ khác.`,
+        )
+      }
+
+      const dataToAdd: Partial<BikeBikeService>[] = newBikeIds.map(
+        (bikeId) => ({
+          bikeId,
+          bikeServiceId: id,
+        }),
+      )
+      await this.bikeBikeServiceRepository.save(dataToAdd)
+    }
+
+    const existedService = await this.bikesServiceRepository.findOne({
+      where: {
+        serviceId,
+        fromPrice,
+        toPrice,
+        fromTime,
+        toTime,
+        unit,
+        id: Not(id),
+      },
+      relations: ['bikeBikeService'],
+    })
+
+    if (existedService) {
+      const bikesToMerge = existedService.bikeBikeService.map(
+        (bbs) => bbs.bikeId,
+      )
+
+      const nonDuplicateBikes = _.difference(bikesToMerge, bikeIds)
+
+      if (nonDuplicateBikes.length > 0) {
+        const mergeData: Partial<BikeBikeService>[] = nonDuplicateBikes.map(
+          (bikeId) => ({
+            bikeId,
+            bikeServiceId: id,
+          }),
+        )
+        await this.bikeBikeServiceRepository.save(mergeData)
+      }
+
+      await this.bikeBikeServiceRepository.delete({
+        bikeServiceId: existedService.id,
+      })
+      await this.bikesServiceRepository.delete(existedService.id)
+    }
+
+    await this.bikesServiceRepository.update(id, {
+      fromPrice,
+      toPrice,
+      fromTime,
+      toTime,
+      unit,
+    })
+
+    return this.bikesServiceRepository.findOne({
+      where: { id },
+      relations: ['bikeBikeService', 'bikeBikeService.bike'],
+    })
+  }
+
+  @Transactional()
+  async delete(id: string) {
+    await this.bikeBikeServiceRepository.delete({ bikeServiceId: id })
+    await this.bikesServiceRepository.delete({ id })
   }
 }
