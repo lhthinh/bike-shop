@@ -16,7 +16,7 @@ export class CreateBikeDto {
 
   @ApiProperty({ example: [], required: false })
   @IsArray()
-  @IsUUID()
+  @IsUUID('all', { each: true })
   capacityIds: string[]
 
   @ApiProperty({ example: '', required: false })
@@ -26,6 +26,6 @@ export class CreateBikeDto {
 
   @ApiProperty({ example: [], required: false })
   @IsArray()
-  @IsUUID()
+  @IsUUID('all', { each: true })
   bikeGenerationIds: string[]
 }

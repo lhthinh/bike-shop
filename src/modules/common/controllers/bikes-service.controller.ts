@@ -9,16 +9,20 @@ import {
   Query,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { UpdateBikeGenerationDto } from '../dto/bike-generation/update-bike-generation.dto'
 import { CreateBikeServiceDto } from '../dto/bike-service/create-bike-service.dto'
 import { GetBikeServiceDto } from '../dto/bike-service/get-bike-service.dto'
-import { BikeServiceService } from '../services/bike-service.service'
 import { UpdateBikeServiceDto } from '../dto/bike-service/update-bike-service.dto'
+import { BikeServiceService } from '../services/bike-service.service'
 
 @ApiTags('Common/BikeService')
 @Controller('common/bike-service')
 export class BikeServiceController {
   constructor(private readonly bikeServiceService: BikeServiceService) {}
+
+  @Get('unit')
+  async getUnit() {
+    return await this.bikeServiceService.getUnit()
+  }
 
   @Get(':serviceId')
   async find(

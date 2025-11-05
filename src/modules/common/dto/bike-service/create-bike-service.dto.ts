@@ -14,7 +14,7 @@ import { EUnit } from '../../common.enum'
 export class CreateBikeServiceDto {
   @ApiProperty({ example: [], required: false })
   @IsArray()
-  @IsUUID()
+  @IsUUID('all', { each: true })
   bikeIds: string[]
 
   @ApiProperty({ example: '', required: false })

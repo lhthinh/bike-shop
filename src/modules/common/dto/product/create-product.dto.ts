@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsOptional, IsString } from 'class-validator'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
 import { PaginationDTO } from 'src/common/dtos/pagination.dto'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
@@ -27,7 +27,7 @@ export class CreateProductDto {
 
   @ApiProperty({ example: 0 })
   @IsOptional()
-  @IsString()
+  @IsNumber()
   @Type(() => Number)
   price: number
 

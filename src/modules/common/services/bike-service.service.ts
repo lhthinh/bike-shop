@@ -14,6 +14,7 @@ import { UpdateBikeServiceDto } from '../dto/bike-service/update-bike-service.dt
 import { GetBikeServiceDto } from '../dto/bike-service/get-bike-service.dto'
 import { BikeBikeService } from 'src/common/entities/_common/bike-bike-service.entity'
 import { Transactional } from 'typeorm-transactional'
+import { UNIT } from '../common.constant'
 
 @Injectable()
 export class BikeServiceService {
@@ -27,6 +28,10 @@ export class BikeServiceService {
     @Inject(BikeService)
     private readonly bikeService: BikeService,
   ) {}
+
+  async getUnit() {
+    return UNIT
+  }
 
   async find(serviceId: string, getBikeServiceDto: GetBikeServiceDto) {
     const { search, bikeId, brandId } = getBikeServiceDto || {}
@@ -56,6 +61,7 @@ export class BikeServiceService {
     ) AS "bikes"
   `,
       )
+      .where('bs.serviceId = :serviceId', { serviceId })
     if (bikeId) {
       query.andWhere('bike.id = :bikeId', { bikeId })
     }

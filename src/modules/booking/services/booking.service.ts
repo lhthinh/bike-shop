@@ -1,14 +1,14 @@
+import { HttpService } from '@nestjs/axios'
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import moment from 'moment'
 import { Booking } from 'src/common/entities/_booking/booking.entity'
-import { RemoveOptions, Repository, SaveOptions } from 'typeorm'
+import { getHourMinuteSecond } from 'src/common/utils/time.util'
+import { StoreService } from 'src/modules/common/services/store.service'
+import { Repository } from 'typeorm'
 import { CreateBookingDto } from '../dto/create-booking.dto'
 import { GetBookingFeeDto } from '../dto/get-booking-fee.dto '
 import { GetDistanceDto } from '../dto/get-distance.dto '
-import moment from 'moment'
-import { getHourMinuteSecond } from 'src/common/utils/time.util'
-import { StoreService } from 'src/modules/common/services/store.service'
-import { HttpService } from '@nestjs/axios'
 const dataTest = {
   type: 1,
   fullName: 'Lê Hoàng Thịnh',
