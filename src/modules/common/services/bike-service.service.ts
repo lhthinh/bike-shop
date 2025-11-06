@@ -1,20 +1,18 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { BikeGeneration } from 'src/common/entities/_common/bike-generation.entity'
-import { ILike, In, Not, Repository } from 'typeorm'
-import { CreateBikeGenerationDto } from '../dto/bike-generation/create-bike-generation.dto'
-import { GetBikeGenerationDto } from '../dto/bike-generation/get-bike-generation.dto'
-import { UpdateBikeGenerationDto } from '../dto/bike-generation/update-bike-generation.dto'
-import { BikeBikeGeneration } from 'src/common/entities/_common/bike-bike-generation.entity'
-import _ from 'lodash'
-import { CreateBikeServiceDto } from '../dto/bike-service/create-bike-service.dto'
-import { BikesService } from 'src/common/entities/_common/bike-service.entity'
-import { BikeService } from './bike.service'
-import { UpdateBikeServiceDto } from '../dto/bike-service/update-bike-service.dto'
-import { GetBikeServiceDto } from '../dto/bike-service/get-bike-service.dto'
+import _, { fromPairs } from 'lodash'
 import { BikeBikeService } from 'src/common/entities/_common/bike-bike-service.entity'
+import { BikesService } from 'src/common/entities/_common/bike-service.entity'
+import { In, Not, Repository } from 'typeorm'
 import { Transactional } from 'typeorm-transactional'
 import { UNIT } from '../common.constant'
+import { CreateBikeServiceDto } from '../dto/bike-service/create-bike-service.dto'
+import { GetBikeServiceDto } from '../dto/bike-service/get-bike-service.dto'
+import { GetServiceFeeByBikeDto } from '../dto/bike-service/get-service-fee-by-bike.dto'
+import { UpdateBikeServiceDto } from '../dto/bike-service/update-bike-service.dto'
+import { BikeService } from './bike.service'
+import { Service } from 'src/common/entities/_common/service.entity'
+import { ServiceService } from './service.service'
 
 @Injectable()
 export class BikeServiceService {
@@ -27,6 +25,9 @@ export class BikeServiceService {
 
     @Inject(BikeService)
     private readonly bikeService: BikeService,
+
+    @Inject(ServiceService)
+    private readonly serviceService: ServiceService,
   ) {}
 
   async getUnit() {
@@ -271,5 +272,38 @@ export class BikeServiceService {
   async delete(id: string) {
     await this.bikeBikeServiceRepository.delete({ bikeServiceId: id })
     await this.bikesServiceRepository.delete({ id })
+  }
+
+  async getServiceFeeByBike(getServiceFeeByBikeDto: GetServiceFeeByBikeDto) {
+    const { serviceId, bikeId } = getServiceFeeByBikeDto
+    const bikeService = await this.bikesServiceRepository.findOne({
+      select: {
+        fromPrice: true,
+        toPrice: true,
+        id: true,
+        serviceId: true,
+        service: true,
+        fromTime: true,
+        toTime: true,
+      },
+      relations: {
+        service: true,
+      },
+      where: {
+        serviceId: serviceId,
+        bikeBikeService: {
+          bikeId: bikeId,
+        },
+      },
+    })
+    const service = await this.serviceService.findOne(serviceId)
+
+    return {
+      fromPrice: bikeService?.fromPrice ?? service?.price,
+      toPrice: bikeService?.toPrice ?? null,
+      fromTime: bikeService?.fromTime ?? null,
+      toTime: bikeService?.toTime ?? null,
+      unit: bikeService?.unit ?? null,
+    }
   }
 }

@@ -27,6 +27,9 @@ async function bootstrap() {
   app.useStaticAssets(path.resolve('files', 'product'), {
     prefix: '/files/product/',
   })
+  app.useStaticAssets(path.resolve('files', 'service'), {
+    prefix: '/files/service/',
+  })
   const document = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('swagger-ui', app, document, swaggerOptions)
   await app.listen(PORT, '0.0.0.0', () => {

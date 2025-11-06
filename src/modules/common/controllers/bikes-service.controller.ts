@@ -41,7 +41,7 @@ export class BikeServiceController {
   async update(
     @Param('id') id: string,
     @Body() updateBikeServiceDto: UpdateBikeServiceDto,
-  ) {
+  ) { 
     return await this.bikeServiceService.update(id, updateBikeServiceDto)
   }
 

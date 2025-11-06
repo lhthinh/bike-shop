@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Product } from 'src/common/entities/_common/product.entity'
 import { Like, Repository } from 'typeorm'
@@ -144,8 +149,8 @@ export class ProductService {
       },
     })
 
-    if(!product) {
-      throw new NotFoundException("Không tồn tại sản phầm")
+    if (!product) {
+      throw new NotFoundException('Không tồn tại sản phầm')
     }
 
     console.log(updateProduct, uploadFile)
@@ -176,14 +181,14 @@ export class ProductService {
     })
   }
 
+  @Transactional()
   async deleteProduct(id: string) {
     const product = await this.getOneById(id)
     if (!product) {
       throw new BadRequestException('Không tồn tại sản phẩm này')
     }
-
-    return await this.productRepository.delete({
-      id,
-    })
+    await this.productRepository.save({ id, uploadId: null })
+    await this.uploadService.removeUploadProduct(id)
+    return await this.productRepository.delete({ id })
   }
 }

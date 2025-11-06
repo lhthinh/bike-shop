@@ -3,6 +3,10 @@
 /node_modules
 /build
 
+# Files
+files/product
+files/service
+
 # Logs
 logs
 *.log

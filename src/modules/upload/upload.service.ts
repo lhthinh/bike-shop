@@ -38,9 +38,7 @@ export class UploadService {
     const file = await this.uploadRepository.findOneBy({ productId })
     if (file) {
       await this.uploadRepository.remove(file)
-      unlink(file.path, (error) => {
-        console.log(error)
-      })
+      unlink(file.path, (error) => {})
     }
   }
 
@@ -50,7 +48,6 @@ export class UploadService {
     })
     if (file) {
       await this.uploadRepository.remove(file)
-
       unlink(file.path, (error) => {})
     }
   }
