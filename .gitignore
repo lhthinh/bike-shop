@@ -4,8 +4,7 @@
 /build
 
 # Files
-files/product
-files/service
+files
 
 # Logs
 logs
