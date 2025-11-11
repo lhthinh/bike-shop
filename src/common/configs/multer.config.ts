@@ -132,3 +132,28 @@ export const uploadProductImage: MulterOptions = {
     },
   }),
 }
+
+export const uploadRecruitmentImage: MulterOptions = {
+  limits: {
+    fileSize: Math.pow(1024, 2) * 20,
+    fieldSize: Math.pow(1024, 2) * 20,
+  },
+  fileFilter: (
+    req: Request,
+    file: Express.Multer.File,
+    cb: DestinationCallback,
+  ) => {
+    if (_.includes(file.mimetype, 'image') && file) {
+      cb(null, true)
+    } else {
+      cb(new BadRequestException('Upload không thành công'), false)
+    }
+  },
+  storage: diskStorage({
+    destination: './files/recruitment',
+    filename: (req: Request, file: Express.Multer.File, cb: any) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+      cb(null, `${uniqueSuffix}_${file.originalname}`)
+    },
+  }),
+}

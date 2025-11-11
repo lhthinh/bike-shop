@@ -2,12 +2,16 @@ import { HttpService } from '@nestjs/axios'
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import moment from 'moment'
+import { paginate } from 'nestjs-typeorm-paginate'
 import { Booking } from 'src/common/entities/_booking/booking.entity'
+import { getPaginationOptions } from 'src/common/utils/pagination.util'
 import { getHourMinuteSecond } from 'src/common/utils/time.util'
 import { StoreService } from 'src/modules/common/services/store.service'
-import { Repository } from 'typeorm'
+import { FindOptionsWhere, Repository } from 'typeorm'
+import { EBookingAt, EBookingStatus } from '../booking.enum'
 import { CreateBookingDto } from '../dto/create-booking.dto'
 import { GetBookingFeeDto } from '../dto/get-booking-fee.dto '
+import { GetBookingDto } from '../dto/get-booking.dto'
 import { GetDistanceDto } from '../dto/get-distance.dto '
 const dataTest = {
   type: 1,
@@ -53,6 +57,53 @@ export class BookingService {
     return distanceInMeter
   }
 
+  async find(getBookingDto: GetBookingDto) {
+    const { statusCode, type, page, limit } = getBookingDto
+    const where: FindOptionsWhere<Booking> = {}
+    if (statusCode) {
+      where.statusCode = statusCode
+    }
+    if (type) {
+      where.type = type
+    }
+    return paginate(this.bookingRepository, getPaginationOptions(page, limit), {
+      select: {
+        id: true,
+        fullName: true,
+        bike: {
+          id: true,
+          name: true,
+        },
+        license: true,
+        service: { id: true, name: true },
+        bookingFrom: true,
+        bookingTo: true,
+        bookingAddress: true,
+        phoneNumber: true,
+        note: true,
+        createdAt: true,
+        createdByCode: true,
+      },
+      relations: {
+        bike: true,
+        service: true,
+      },
+      where,
+    })
+  }
+
+  // async getStatusTab(getStatusTabDto: GetStatusTabDto) {
+  //   const { type } = getStatusTabDto
+
+  //   const query = await this.bookingRepository
+  //     .createQueryBuilder('b')
+  //     .select(['b.statusCode', 'COUNT(b.id)::int'])
+  //     .leftJoin('b.status', 's')
+  //     .groupBy('b.statusCode')
+  //     .getRawMany()
+  //   return query
+  // }
+
   async createBooking(createBookingDto: CreateBookingDto) {
     const {
       type,
@@ -69,6 +120,9 @@ export class BookingService {
       note,
       bookingAddress,
     } = createBookingDto
+    if (!Object.values(EBookingAt).includes(type)) {
+      throw new BadRequestException()
+    }
     const { hour: hourFrom, minute: minuteFrom } =
       getHourMinuteSecond(bookingTimeFrom)
     const bookingFrom = new Date(
@@ -103,6 +157,7 @@ export class BookingService {
       storeId: storeId || null,
       bikeId: bikeId || null,
       serviceId: serviceId || null,
+      statusCode: EBookingStatus.PENDING,
     }
     return await this.bookingRepository.save(data)
   }

@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Recruitment } from 'src/common/entities/_hr/recruitment.entity'
 import { ILike, Repository } from 'typeorm'
 import { GetRecruitmentDto } from '../dtos/recruitment/get-recruitment.dto'
-import { CreateRecruitmentDto } from '../dtos/recruitment/create-recruitment.dto'
+import { CreateJobApplicationDto } from '../dtos/job-application/create-job-application.dto'
 
 @Injectable()
-export class RecruimentService {
+export class JobApplicationService {
   constructor(
     @InjectRepository(Recruitment)
     private readonly recruitmentRepository: Repository<Recruitment>,
@@ -18,8 +18,7 @@ export class RecruimentService {
     })
   }
 
-  async create(createRecruitmentDto: CreateRecruitmentDto) {
-    const { description, endDate, posision, startDate, upload } =
-      createRecruitmentDto
+  async create(createRecruitmentDto: CreateJobApplicationDto) {
+    const { dob, email, fullName, gender, phone } = createRecruitmentDto
   }
 }

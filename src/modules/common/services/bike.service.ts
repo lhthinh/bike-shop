@@ -1,10 +1,12 @@
 import { BadRequestException, Inject, Injectable, Search } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import {
+  And,
   DataSource,
   FindOptions,
   FindOptionsWhere,
   ILike,
+  IsNull,
   Like,
   Not,
   Repository,
@@ -102,25 +104,37 @@ export class BikeService {
     getBikeNotInServiceDto: GetBikeNotInServiceDto,
   ) {
     const { bikeServiceId, search, serviceId } = getBikeNotInServiceDto || {}
+
+    const where: FindOptionsWhere<Bike>[] = [
+      {
+        name: ILike(`%${search || ''}%`),
+        bikeBikeServices: {
+          bikeService: {
+            serviceId: Not(serviceId),
+          },
+        },
+      },
+      {
+        name: ILike(`%${search || ''}%`),
+        bikeBikeServices: {
+          bikeService: {
+            serviceId: IsNull(),
+          },
+        },
+      },
+    ]
+    if (bikeServiceId) {
+      where.push({
+        name: ILike(`%${search || ''}%`),
+        bikeBikeServices: {
+          bikeService: {
+            id: bikeServiceId,
+          },
+        },
+      })
+    }
     return await this.bikeRepository.find({
-      where: [
-        {
-          name: ILike(`%${search || ''}%`),
-          bikeBikeServices: {
-            bikeService: {
-              serviceId: Not(serviceId),
-            },
-          },
-        },
-        {
-          name: ILike(`%${search || ''}%`),
-          bikeBikeServices: {
-            bikeService: {
-              id: bikeServiceId,
-            },
-          },
-        },
-      ],
+      where: where,
     })
   }
 

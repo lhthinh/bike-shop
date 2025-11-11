@@ -11,6 +11,7 @@ import { Brand } from '../_common/brand.entity'
 import { Bike } from '../_common/bike.entity'
 import { Store } from '../_common/store.entity'
 import { Service } from '../_common/service.entity'
+import { BookingStatus } from './booking-status.entity'
 
 @Entity({
   // schema: '_booking',
@@ -43,6 +44,13 @@ export class Booking extends CoreEntity {
 
   @Column({ name: 'booking_address', type: 'varchar', nullable: true })
   bookingAddress: string
+
+  @ManyToOne(() => BookingStatus, (type) => type.booking)
+  @JoinColumn({ name: 'status_code', referencedColumnName: 'code' })
+  status: BookingStatus
+
+  @Column({ name: 'status_code', type: 'varchar', nullable: true })
+  statusCode: string
 
   @ManyToOne(() => Brand, (brand) => brand.booking)
   @JoinColumn({ name: 'brand_id', referencedColumnName: 'id' })

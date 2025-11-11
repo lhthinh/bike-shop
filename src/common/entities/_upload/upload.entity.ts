@@ -12,6 +12,7 @@ import { Booking } from '../_booking/booking.entity'
 import { Product } from '../_common/product.entity'
 import { ETypeFile } from 'src/common/enums/type-image.enum'
 import { Service } from '../_common/service.entity'
+import { JobApplication } from '../_hr/job-application.entity'
 
 @Entity({
   // schema: '_file',
@@ -44,4 +45,18 @@ export class Upload extends CoreEntity {
   @OneToOne(() => Service, (type) => type.uploadVideo)
   @JoinColumn([{ name: 'service_image_id', referencedColumnName: 'id' }])
   uploadServiceVideo: Service
+
+  @Column({ name: 'job_application_id', type: 'varchar', nullable: true })
+  jobApplicationId: string
+
+  @OneToOne(() => JobApplication, (type) => type.upload)
+  @JoinColumn([{ name: 'job_application_id', referencedColumnName: 'id' }])
+  jobApplication: JobApplication
+
+  @Column({ name: 'recruitment_id', type: 'varchar', nullable: true })
+  recruitmentId: string
+
+  @OneToOne(() => JobApplication, (type) => type.upload)
+  @JoinColumn([{ name: 'recruitment_id', referencedColumnName: 'id' }])
+  recruitment: JobApplication
 }

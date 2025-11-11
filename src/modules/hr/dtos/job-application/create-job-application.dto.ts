@@ -1,33 +1,35 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsDate, IsDateString, IsOptional, IsString } from 'class-validator'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
+import { PaginationDTO } from 'src/common/dtos/pagination.dto'
 import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
-export class CreateRecruitmentDto {
+export class CreateJobApplicationDto {
   @ApiProperty({ example: '' })
   @IsString()
   @Type(() => String)
   @Trim()
-  posision: string
+  fullName: string
 
   @ApiProperty({ example: '' })
   @IsString()
   @Type(() => String)
   @Trim()
-  description: string
+  phone: string
 
   @ApiProperty({ example: '' })
-  @IsDateString()
-  @Trim()
-  startDate: Date
-
-  @ApiProperty({ example: '' })
-  @IsDateString()
-  @Trim()
-  endDate: Date
-
-  @ApiProperty({ type: 'string', format: 'binary' })
-  @IsOptional()
   @IsString()
-  upload: string
+  @Type(() => String)
+  @Trim()
+  email: string
+
+  @ApiProperty({ example: '' })
+  @IsString()
+  @Type(() => String)
+  @Trim()
+  dob: string
+
+  @ApiProperty({ example: '' })
+  @IsNumber()
+  gender: number
 }

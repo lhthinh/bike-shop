@@ -1,12 +1,24 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
-import { BookingService } from '../services/booking.service'
+import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 import { CreateBookingDto } from '../dto/create-booking.dto'
 import { GetBookingFeeDto } from '../dto/get-booking-fee.dto '
-import { GetDistanceDto } from '../dto/get-distance.dto '
+import { GetBookingDto } from '../dto/get-booking.dto'
+import { BookingService } from '../services/booking.service'
 
+@ApiTags('Booking')
 @Controller('booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
+
+  @Get()
+  async get(@Query() getBookingDto: GetBookingDto) {
+    return await this.bookingService.find(getBookingDto)
+  }
+
+  // @Get('status-tab')
+  // async getStatusTab(@Query() getStatusTabDto: GetStatusTabDto) {
+  //   return await this.bookingService.getStatusTab(getStatusTabDto)
+  // }
 
   @Post('')
   async createBooking(@Body() createBookingDto: CreateBookingDto) {
@@ -16,10 +28,5 @@ export class BookingController {
   @Post('fee')
   async getBookingFee(@Body() getBookingFee: GetBookingFeeDto) {
     return await this.bookingService.getBookingFee(getBookingFee)
-  }
-
-  @Get()
-  async getBooking() {
-
   }
 }

@@ -4,9 +4,12 @@ import { RecruimentService } from './services/recruiment.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { RecruitmentType } from 'src/common/entities/_hr/recruitment-type.entity'
 import { Recruitment } from 'src/common/entities/_hr/recruitment.entity'
+import { JobApplication } from 'src/common/entities/_hr/job-application.entity'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Recruitment, RecruitmentType])],
+  imports: [
+    TypeOrmModule.forFeature([Recruitment, RecruitmentType, JobApplication]),
+  ],
   controllers: [RecruimentController],
   providers: [RecruimentService],
 })

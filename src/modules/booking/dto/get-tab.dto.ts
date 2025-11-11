@@ -1,13 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import { IsOptional, IsString } from 'class-validator'
-import { Trim } from 'src/common/libs/class-tranformer/decorator'
 
-export class GetBikeDto {
-  @ApiProperty({ example: '', required: false })
+export class GetTabDto {
+  @ApiProperty({ example: '' })
   @IsOptional()
-  @IsString()
   @Type(() => String)
-  @Trim()
-  search: string
+  @IsString()
+  type: string
 }
